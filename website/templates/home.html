@@ -1,0 +1,30 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<h1 align="center">Notes</h1>
+<ul class="list-group list-group-flush" id="notes">
+  {% for note in notes %}
+  <li class="list-group-item">
+    <span text-align="left">{{ note.data }}</span> - {{ note.date}} - {{ users.query.filter_by(id=note.user_id).first().first_name }}
+    <div><img src= "{{ url_for('static', filename= 'upload-images/') + note.image }}" width="300px" height="200px" /></div>
+    {% if note.user_id == user.id %}
+    <button type="button" class="close" onClick="deleteNote({{ note.id }} )">
+      <span aria-hidden="true" color="#000000">&times;</span>
+    </button>
+    {% else %}
+    <button type="button" class="close" disabled onClick="deleteNote({{ note.id }})">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {% endif %}
+
+  </li>
+  {% endfor %}
+</ul>
+<form method="POST" enctype="multipart/form-data">
+  <textarea name="note" id="note" class="form-control"></textarea>
+  <input type="file" name="file" />
+  <br />
+  <div align="center">
+    <button type="submit" class="btn btn-primary">Add Note</button>
+  </div>
+</form>
+{% endblock %}
