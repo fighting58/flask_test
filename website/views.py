@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from .models import Note, User
+from datetime import datetime
 from . import db, ALLOWED_EXTENSIONS
 import json
 import os
@@ -27,7 +28,9 @@ def home():
             flash('No selected file', category="error")
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            _, ext = os.path.splitext(file.filename)
+            filename = str(current_user.id) + str(datetime.now().isoformat(timespec='seconds')) + ext
+            filename = secure_filename(filename)
             file.save(os.path.join('C:/Users/USER/PycharmProjects/Flask-Web-App-Tutorial/website/static/upload-images', filename))
 
         if len(note) < 1:
@@ -55,3 +58,34 @@ def delete_note():
             flash('작성자만 삭제할 수 있습니다.', category='error')
 
     return jsonify({})
+
+@views.route('/teanote', methods=['GET', 'POST'])
+@login_required
+def teanote():
+    if request.method == 'POST': 
+        note=request.form.get('title')
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file', category="error")
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join('C:/Users/USER/PycharmProjects/Flask-Web-App-Tutorial/website/static/upload-images', filename))
+        
+        if len(note) < 1:
+            flash('Title is too short!', category='error') 
+        else:
+            new_note = Note(data=note, image=filename, user_id=current_user.id)  #providing the schema for the note 
+            db.session.add(new_note) #adding the note to the database 
+            db.session.commit()
+            flash('Note added!', category='success')
+
+
+        return redirect(url_for('views.home', notes=Note.query.all(), user=current_user, users=User))
+
+    return render_template("tea.html", user=current_user)
+
+@views.route('/test')
+@login_required
+def test():
+    return render_template('tea-notes.html', user=current_user)
