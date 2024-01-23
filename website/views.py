@@ -31,7 +31,7 @@ def home():
             _, ext = os.path.splitext(file.filename)
             filename = str(current_user.id) + str(datetime.now().isoformat(timespec='seconds')) + ext
             filename = secure_filename(filename)
-            file.save(os.path.join('C:/Users/USER/PycharmProjects/Flask-Web-App-Tutorial/website/static/upload-images', filename))
+            file.save(os.path.join('C:/Users/Kim/Documents/PythonProjects/flask_test/website/static/upload-images', filename))
 
         if len(note) < 1:
             flash('Note is too short!', category='error') 
@@ -59,9 +59,9 @@ def delete_note():
 
     return jsonify({})
 
-@views.route('/teanote', methods=['GET', 'POST'])
+@views.route('/teanote_form', methods=['GET', 'POST'])
 @login_required
-def teanote():
+def teanote_form():
     if request.method == 'POST': 
         note=request.form.get('title')
         file = request.files['file']
@@ -70,7 +70,7 @@ def teanote():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join('C:/Users/USER/PycharmProjects/Flask-Web-App-Tutorial/website/static/upload-images', filename))
+            file.save(os.path.join('C:/Users/Kim/Documents/PythonProjects/flask_test/website/static/upload-images', filename))
         
         if len(note) < 1:
             flash('Title is too short!', category='error') 
@@ -81,9 +81,9 @@ def teanote():
             flash('Note added!', category='success')
 
 
-        return redirect(url_for('views.home', notes=Note.query.all(), user=current_user, users=User))
+        return redirect(url_for('views.home', _method='POST', notes=Note.query.all(), user=current_user, users=User))
 
-    return render_template("tea.html", user=current_user)
+    return render_template("teanote_form.html", user=current_user)
 
 @views.route('/test')
 @login_required

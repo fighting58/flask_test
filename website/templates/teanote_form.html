@@ -1,0 +1,251 @@
+{% extends "base.html" %} {% block title %}Tea Note{% endblock %} {% block content
+    %}
+<h1 align="center">Tea Note</h1>
+
+{% set tea_kinds = {"백차":"white-tea", "황차": "yellow-tea", "녹차":"green-tea", "우롱차":"oorong", "홍차":"red-tea", "보이차":"boi", "기타": 'etc'} %}
+
+<form method="POST" enctype="multipart/form-data">
+  <div>
+  <input type="text" name = "teaname" id="teaname" placeholder="차이름" />
+  <input type="text" name = "saler" id="saler" placeholder="판매처" />
+  <input type="text" name = "country" id="country" placeholder="원산지" />
+  </div>
+
+  <div class="type-of-tea">
+    {% for tea_key, tea_value in tea_kinds.items() %}
+    <input type="radio" name="{{ tea_value }}" id="{{ tea_value }}" /> {{ tea_key }}
+    {% endfor %}
+  </div>
+
+  <div class="tea-grade">
+    평점: <input type="range" class="big-slider" min="1" max="5" name="reputation" value="1" />
+  </div>
+
+  <div class="environment">
+    <div class="environment-item">    
+        <label for="tea-quantity">무게(g) </label><input type="number" name = "tea-quantity" id="tea-quantity" value="5" /> 
+    </div>
+    <div class="environment-item"> 
+        <label for="tea-temprature">온도(℃) </label><input type="number" name = "tea-temprature" id="tea-temprature" value="35" />
+    </div>
+    <div class="environment-item"> 
+        <label for="tea-brew-time">시간(sec) </label><input type="number" name = "tea-brew-time" id="tea-brew-time" value="100" />
+    </div>
+  </div>
+
+  <div class="tea-leaf">
+    <p> 잎 </p>
+    <table>
+        <th> 
+            <td> 마른 잎</td>
+            <td> 우린 잎</td>
+        </th>
+        <tr>
+            <td>외형</td>
+            <td><textarea  rows="4" cols="30" name='dry-leaf-appearence' id='dry-leaf-appearence'> </textarea>
+            <td><textarea rows="4" cols="30" name='brew-leaf-appearence' id='brew-leaf-appearence'></textarea>
+        </tr>
+        <tr> 
+            <td>향</td>
+            <td><textarea rows="4" cols="30" name='dry-leaf-perfume' id='dry-leaf-perfume' > </textarea>
+            <td><textarea rows="4" cols="30" name='brew-leaf-perfume' id='brew-leaf-perfume' ></textarea>
+        </tr>
+    </table>
+  </div>
+
+  <div class="tea-leaf-color">
+    <p> 수색 </p>
+    <table class="'tea-leaf-color-table">
+        <tr class="colored-row">
+            <td id="gradient-background1"> </td>
+            <td id="gradient-background2"> </td>
+            <td id="gradient-background3"> </td> 
+            <td id="gradient-background4"> </td>
+            <td id="gradient-background5"> </td>
+            <td id="gradient-background6"> </td>
+            <td id="gradient-background7"> </td>
+        </tr>
+        <tr>
+            <td><input type="radio" name="leaf-color" id="off-white-leaf">미색</td>
+            <td><input type="radio" name="leaf-color" id="light-green-leaf">연두</td>
+            <td><input type="radio" name="leaf-color" id="yellow-leaf">노랑</td>
+            <td><input type="radio" name="leaf-color" id="amber-leaf">호박</td>
+            <td><input type="radio" name="leaf-color" id="orange-leaf">주황</td>
+            <td><input type="radio" name="leaf-color" id="red-leaf">빨강</td>
+            <td><input type="radio" name="leaf-color" id="brown-leaf">갈색</td>
+        </tr>
+    </table>
+    
+  </div>
+
+  <div class="transparency">
+    <p> 투명도</p>
+    <div>
+        <input type="range" class="big-slider" id="transparency-slider" min="1" max="5" value="1" oninput="document.getElementById('tea-transparency').innerHTML=this.value;" />
+        <span class="value-indicator" id="tea-transparency">1</span>
+        <div class="transparency-text"><span>매우 맑음</span><span>맑음</span> <span>중간</span><span>탁함</span><span>매우 탁함</span></div>
+        
+    </div>
+  </div>
+
+
+
+  <div class="survey">
+    <div class="survey-subject">
+        <div class="taste-survey">
+            <div class="taste-strength-survey">
+                <div class="taste-slider">                    
+                    <div><span>맛</span></div>
+                    <div><input type="range" class="big-slider" id="taste-slider" min="1" max="10" value="1" /></div>
+                    <div class="survey-text"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+                </div>
+            </div>
+            <p> </p>
+            {% for taste in ['풍부함', '기름짐', '훈연', '균형', '불쾌감', '후미', '수렴성', '매운맛', '신맛', '쓴맛', '짠맛', '단맛'] %}
+            <div class="survey-item">
+                <label class="survey-label" for="t{{ loop.index }}">{{ taste }}</label>
+                <input type="range" name="t{{ loop.index }}" id="t{{ loop.index }}" min="1" max="10" value="5" oninput="document.getElementById('t{{ loop.index }}_value').innerHTML=this.value;"/>
+                <span class="value-indicator" id="t{{ loop.index }}_value">5</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="survey-subject">
+        <div class="perfume-survey">
+            <div class="perfume-slider"> 
+            <div> 향 </div>
+                <input type="range" class="big-slider" id="perfume-slider" min="1" max="10" value="1" />
+                <div class="survey-text"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            </div>
+            <p> </p>
+            {% for perfume in ['식물향', '바다향', '우유향', '꽃향', '토양향', '목재향', '과일향', '탄향', '동물향', '광물향', '단향', '매운향'] %}
+            <div class="survey-item">
+                <label class="survey-label" for="p{{ loop.index }}">{{ perfume }}</label>
+                <input type="range" class="small-slider" name="p{{ loop.index }}" id="p{{ loop.index }}" min="1" max="10" value="5" oninput="document.getElementById('p{{ loop.index }}_value').innerHTML=this.value;" />
+                <span class="value-indicator" id="p{{ loop.index }}_value">5</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+
+  <div class="finish">
+    <p> 피니쉬 </p>
+    <div>
+        <input type="range" class="big-slider" id="finish-slider" min="1" max="5" value="1" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
+        <span class="value-indicator" id="tea-finish">1</span>
+        <div class="finish-text"><span>매우 맑음</span><span>맑음</span> <span>중간</span><span>탁함</span><span>매우 탁함</span></div>
+        
+    </div>
+  </div>
+
+  <textarea name="note" id="note" class="form-control" placeholder="총평" rows="4"></textarea>
+  <input type="file" name="file" />
+  <br />
+  <div class="submit-button">
+    <button type="submit" class="btn btn-primary">Add Note</button>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block style %}
+<style>
+    .value-indicator {
+        display: inline-block;
+        width: 30px;
+        padding: 0px 10px;
+        border: 1px solid black;
+        text-align: center;
+    }
+    .survey-label {
+        display: inline-block;
+        width: 80px;
+        text-align: center;
+    }
+    .survey {
+        display:flex;        
+        justify-content: space-around;
+    }
+    .survey-subject {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .taste-survey {
+        justify-items: center;
+    }
+    .taste-strength-survey {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .big-slider {
+        display: inline-block;
+        width: 80%;
+    }
+    .small-slider {
+        display: inline-block;
+        width: 60%;
+    }
+    .taste-slider, .perfume-slider {
+        display: flexbox;
+        text-align: center;
+        flex-direction: column;
+        justify-items: center;
+        justify-content: center;
+    }
+    .survey-item {
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .colored-row {
+        height: 20px;
+    }
+    #gradient-background1 {
+        min-width: 20px;
+        background-image: linear-gradient(to right, white , #DDDDDD);;
+    }
+    #gradient-background2 {
+        min-width: 20px;
+        background-image: linear-gradient(to right, white , #94C056);;
+    }
+    #gradient-background3 {
+        min-width: 20px;
+        background-image: linear-gradient(to right, white , #FFD10D);;
+    }
+    #gradient-background4 {
+        min-width: 20px;
+        background-image: linear-gradient(to right, white , #BD7F41);;
+    }
+    #gradient-background5 {
+        min-width: 20px;
+        background-image: linear-gradient(to right, white , #F2773D);;
+    }
+    #gradient-background6 {
+        min-width: 20px;
+        background-image: linear-gradient(to right, white , #BB4642);;
+    }
+    #gradient-background7 {
+        min-width: 20px;
+        background-image: linear-gradient(to right, white , #975A3E);;
+    }
+    .tea-leaf-color-table , tr, td {
+        text-align: center;
+    }
+    .transparency-text, .survey-text, .finish-text {
+        display: inline-flex;
+        width: 80%;
+        justify-content: space-between;
+    }
+    .slider-tick {
+        display: block;
+    }
+    .submit-button {
+        text-align: center;
+    }
+
+</style>
+{% endblock %}
