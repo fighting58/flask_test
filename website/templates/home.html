@@ -1,24 +1,40 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block content %}
 <h1 align="center">Notes</h1>
 <ul class="list-group list-group-flush" id="notes">
   {% for note in notes %}
+
   <li class="list-group-item">
-    <span text-align="left">{{ note.data }}</span> - {{ note.date}} - {{ users.query.filter_by(id=note.user_id).first().first_name }}
-    <div><img src= "{{ url_for('static', filename= 'upload-images/') + note.image }}" width="300px" height="200px" /></div>
-    {% if note.user_id == user.id %}
-    <button type="button" class="close" onClick="deleteNote({{ note.id }} )">
+    <div class="note-item">    
+      <div class="note-image">
+        <a href="{{ url_for('views.show_note', noteid=note.id) }}">
+          <img class="tea-image" src= "{{ url_for('static', filename= 'upload-images/') + note.image }}" />
+        </a>
+      </div>
+      <div class="note-contents">
+        <div class="note-content"><span class="tea-name">{{ note.teaname }}</span></div>
+        <div class="note-content"><span>{{ '★' * note.grade }}</span><span>{{ '☆' * (5 - note.grade) }}</span></div>
+        <div class="note-content">&nbsp;{{ note.brief_note1 }}</div>
+        <div class="note-content">&nbsp;{{ note.brief_note2 }}</div>
+        <div class="note-content">&nbsp;{{ note.brief_note3 }}</div>
+        <div class="note-content">&nbsp;{{ note.brief_note4 }}</div>
+        <div class="note-content">{{ note.date }}</div>
+        <div class="note-content">{{ users.query.filter_by(id=note.user_id).first().nickname }} </div>
+      </div>
+    </div>
+    {% if (note.user_id == user.id) or (user.nickname == "관리자") %}
+    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
       <span aria-hidden="true" color="#000000">&times;</span>
     </button>
     {% else %}
-    <button type="button" class="close" disabled onClick="deleteNote({{ note.id }})">
+    <button type="button" class="close" disabled>
       <span aria-hidden="true">&times;</span>
     </button>
     {% endif %}
-
   </li>
   {% endfor %}
 </ul>
+<!--
 <form method="POST" enctype="multipart/form-data">
   <textarea name="note" id="note" class="form-control"></textarea>
   <input type="file" name="file" />
@@ -27,4 +43,31 @@
     <button type="submit" class="btn btn-primary">Add Note</button>
   </div>
 </form>
+-->
+{% endblock %}
+
+{% block style %}
+{{ super() }}
+<style>
+  .note-item {
+    display: flex;
+    justify-content: center;
+  }
+  .note-contents {
+    padding: 0 2rem;
+  }
+  .note-content {
+    width: 20rem;
+    border-bottom: 1px solid rgb(165, 162, 162);
+    text-align: right;
+  }
+  .tea-name {
+    font-weight: bold;
+  }
+  .tea-image {
+    width: 20rem;
+  }
+
+
+</style>
 {% endblock %}

@@ -1,10 +1,10 @@
-{% extends "base.html" %} {% block title %}Tea Note{% endblock %} {% block content
-    %}
+{% extends "base.html" %} {% block title %}Tea Note{% endblock %} 
+{% block content %}
 <h1 align="center">Tea Note</h1>
 
 {% set tea_kinds = {"백차":"white-tea", "황차": "yellow-tea", "녹차":"green-tea", "우롱차":"oorong", "홍차":"red-tea", "보이차":"boi", "기타": 'etc'} %}
 
-<form method="POST" enctype="multipart/form-data">
+<form id="teanote_form" method="POST" enctype="multipart/form-data">
   <div>
   <input type="text" name = "teaname" id="teaname" placeholder="차이름" />
   <input type="text" name = "saler" id="saler" placeholder="판매처" />
@@ -13,12 +13,12 @@
 
   <div class="type-of-tea">
     {% for tea_key, tea_value in tea_kinds.items() %}
-    <input type="radio" name="{{ tea_value }}" id="{{ tea_value }}" /> {{ tea_key }}
+    <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" /> {{ tea_key }}
     {% endfor %}
   </div>
 
   <div class="tea-grade">
-    평점: <input type="range" class="big-slider" min="1" max="5" name="reputation" value="1" />
+    평점: <input type="range" class="big-slider" min="1" max="5" name="grade" value="1" />
   </div>
 
   <div class="environment">
@@ -65,17 +65,20 @@
             <td id="gradient-background6"> </td>
             <td id="gradient-background7"> </td>
         </tr>
-        <tr>
-            <td><input type="radio" name="leaf-color" id="off-white-leaf">미색</td>
-            <td><input type="radio" name="leaf-color" id="light-green-leaf">연두</td>
-            <td><input type="radio" name="leaf-color" id="yellow-leaf">노랑</td>
-            <td><input type="radio" name="leaf-color" id="amber-leaf">호박</td>
-            <td><input type="radio" name="leaf-color" id="orange-leaf">주황</td>
-            <td><input type="radio" name="leaf-color" id="red-leaf">빨강</td>
-            <td><input type="radio" name="leaf-color" id="brown-leaf">갈색</td>
+        <tr>            
+            <td colspan="7">
+                <div class="leaf-color-items"></div>
+                    <input type="radio" name="leaf-color" id="off-white-leaf" value="미색" />미색
+                    <input type="radio" name="leaf-color" id="light-green-leaf" value="연두" />연두
+                    <input type="radio" name="leaf-color" id="yellow-leaf" value="노랑" />노랑
+                    <input type="radio" name="leaf-color" id="amber-leaf" value="호박" />호박
+                    <input type="radio" name="leaf-color" id="orange-leaf" value="주황" />주황
+                    <input type="radio" name="leaf-color" id="red-leaf" value="빨강" />빨강
+                    <input type="radio" name="leaf-color" id="brown-leaf" value="갈색" />갈색
+                </div>
+            </td>
         </tr>
-    </table>
-    
+    </table>    
   </div>
 
   <div class="transparency">
@@ -133,8 +136,7 @@
     <div>
         <input type="range" class="big-slider" id="finish-slider" min="1" max="5" value="1" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
         <span class="value-indicator" id="tea-finish">1</span>
-        <div class="finish-text"><span>매우 맑음</span><span>맑음</span> <span>중간</span><span>탁함</span><span>매우 탁함</span></div>
-        
+        <div class="finish-text"><span>매우 길다</span><span>길다</span> <span>중간</span><span>짧다</span><span>매우 짧다</span></div>
     </div>
   </div>
 
@@ -147,19 +149,28 @@
 </form>
 
 {% endblock %}
-
+<!--
+{% block javascript %}
+<script>
+    const form = document.getElementById('teanote_form'); // 폼 엘리먼트
+    form.querySelector('#oorong').checked = true; // 체크박스 체크 여부(checked)
+    form.querySelector('#off-white-leaf').checked = true; // 체크박스 체크 여부(checked)
+</script>
+{% endblock %}
+-->
 {% block style %}
+{{ super() }}
 <style>
     .value-indicator {
         display: inline-block;
-        width: 30px;
-        padding: 0px 10px;
+        width: 3rem;
+        padding: 0px 1rem;
         border: 1px solid black;
         text-align: center;
     }
     .survey-label {
         display: inline-block;
-        width: 80px;
+        width: 8rem;
         text-align: center;
     }
     .survey {
@@ -200,39 +211,37 @@
         align-items: center;
     }
     .colored-row {
-        height: 20px;
+        height: 2rem;
     }
     #gradient-background1 {
-        min-width: 20px;
+        min-width: 2.5rem;
         background-image: linear-gradient(to right, white , #DDDDDD);;
     }
     #gradient-background2 {
-        min-width: 20px;
+        min-width: 2.5rem;
         background-image: linear-gradient(to right, white , #94C056);;
     }
     #gradient-background3 {
-        min-width: 20px;
+        min-width: 2.5rem;
         background-image: linear-gradient(to right, white , #FFD10D);;
     }
     #gradient-background4 {
-        min-width: 20px;
+        min-width: 2.5rem;
         background-image: linear-gradient(to right, white , #BD7F41);;
     }
     #gradient-background5 {
-        min-width: 20px;
+        min-width: 2.5rem;
         background-image: linear-gradient(to right, white , #F2773D);;
     }
     #gradient-background6 {
-        min-width: 20px;
+        min-width: 2.5rem;
         background-image: linear-gradient(to right, white , #BB4642);;
     }
     #gradient-background7 {
-        min-width: 20px;
+        min-width: 2.5rem;
         background-image: linear-gradient(to right, white , #975A3E);;
     }
-    .tea-leaf-color-table , tr, td {
-        text-align: center;
-    }
+
     .transparency-text, .survey-text, .finish-text {
         display: inline-flex;
         width: 80%;
@@ -243,6 +252,10 @@
     }
     .submit-button {
         text-align: center;
+    }
+    .leaf-color-items {
+        display: flex;
+        justify-content: space-around;
     }
 
 </style>

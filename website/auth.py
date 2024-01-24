@@ -44,8 +44,12 @@ def sign_up():
         password2 = request.form.get('password2')
 
         user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email already exists.', category='error')
+        nick = User.query.filter_by(nickname=nickname).first()
+
+        if nick:
+            flash('이미 사용 중인 별명입니다.', category='error')
+        elif user:
+            flash('이미 등록된 계정입니다.', category='error')
         elif len(email) < 4:
             flash('Email must be greater than 3 characters.', category='error')
         elif len(nickname) < 2:
