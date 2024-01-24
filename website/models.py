@@ -5,6 +5,7 @@ from sqlalchemy.sql import func
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # ID 
     teaname = db.Column(db.String(150), nullable=False)           # 차이름
+    sailer = db.Column(db.String(150))           # 판매처
     country = db.Column(db.String(150))           # 원산지
     type_of_tea = db.Column(db.String(150))      # 차 종류: 백차, 황차, 녹차, ...
     tea_quantity = db.Column(db.Integer)          # 무게

@@ -17,7 +17,7 @@ def file_upload(userid, file):
     _, ext = os.path.splitext(file.filename)
     fn = str(userid) + str(datetime.now().isoformat(timespec='seconds')) + ext
     fn = secure_filename(fn)
-    file.save(os.path.join('C:/Users/USER/PycharmProjects/flask_test-1/website/static/upload-images', fn))
+    file.save(os.path.join('C:/Users/Kim/Documents/PythonProjects/flask_test-1/website/static/upload-images', fn))
     return fn
 
 def split_string(input_str, max_length=20):
@@ -83,6 +83,7 @@ def delete_note():
 def teanote_form():
     if request.method == 'POST': 
         teaname = request.form.get('teaname')
+        sailer = request.form.get('sailer')
         country = request.form.get('country')
         type_of_tea = request.form.getlist('tea-types')[0]
 
@@ -159,8 +160,6 @@ def teanote_form():
             brief_note3 = splited_note[2]
             brief_note4 = "..."
 
-        print(brief_note1, brief_note2, brief_note3, brief_note4)
-
         date =  datetime.now().replace(microsecond=0)
 
         file = request.files['file']
@@ -173,7 +172,7 @@ def teanote_form():
         if len(teaname) < 1:
             flash('Title is too short!', category='error') 
         else:
-            new_note = Note(teaname=teaname, country=country, type_of_tea=type_of_tea,
+            new_note = Note(teaname=teaname, sailer=sailer, country=country, type_of_tea=type_of_tea,
                             tea_quantity=tea_quantity, tea_temprature=tea_temprature,
                             tea_brew_time=tea_brew_time, grade=grade, dry_leaf_appearence=dry_leaf_appearence,
                             brew_leaf_appearence=brew_leaf_appearence, dry_leaf_perfume=dry_leaf_perfume,
