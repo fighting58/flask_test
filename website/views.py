@@ -17,7 +17,7 @@ def file_upload(userid, file):
     _, ext = os.path.splitext(file.filename)
     fn = str(userid) + str(datetime.now().isoformat(timespec='seconds')) + ext
     fn = secure_filename(fn)
-    file.save(os.path.join('C:/Users/USER/PycharmProjects/flask_test/website/static/upload-images', fn))
+    file.save(os.path.join('C:/Users/Kim/Documents/PythonProjects/flask_test/website/static/upload-images', fn))
     return fn
 
 def split_string(input_str, max_length=20):
@@ -137,8 +137,8 @@ def teanote_form():
 
         leaf_color = request.form.getlist('leaf-color')[0]
 
-        transparency = request.form.get('transparency')
-        finish = request.form.get('finish')
+        transparency = request.form.get('transparency-slider')
+        finish = request.form.get('finish-slider')
         note = request.form.get('note')
         splited_note = split_string(note, 20)
 

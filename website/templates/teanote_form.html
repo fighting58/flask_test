@@ -13,13 +13,13 @@
                 <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" /> {{ tea_key }}
                 {% endfor %}
             </div>
-            <br />
+            <span class="d-block p-0 "> &nbsp; </span>
             <div class="tea-name-saler-country">
                 <div class="tea-outline-item"> 
                     <label class="input-label" for="teaname">차이름</label><input class="tea-outline-input" type="text" name = "teaname" id="teaname" />
                 </div>
                 <div class="tea-outline-item"> 
-                    <label class="input-label" for="saler">판매처</label><input class="tea-outline-input" type="text" name = "saler" id="saler" />
+                    <label class="input-label" for="sailer">판매처</label><input class="tea-outline-input" type="text" name = "sailer" id="sailer" />
                 </div>
                 <div class="tea-outline-item"> 
                     <label class="input-label" for="country">원산지</label><input class="tea-outline-input" type="text" name = "country" id="country" />
@@ -30,7 +30,7 @@
             <div class="tea-grade">
                 <label class="input-label" for="country">평점: </label><input type="range" class="big-slider" min="1" max="5" name="grade" value="1" />
             </div>
-            <br />
+            <span class="d-block p-0 "> &nbsp; </span>
             <div class="environment">
                 <div class="tea-outline-item">    
                     <label class="input-label" for="tea-quantity">무게(g)</label><input class="tea-outline-input" type="number" name = "tea-quantity" id="tea-quantity" value="5" /> 
@@ -39,7 +39,7 @@
                     <label class="input-label" for="tea-temprature">온도(℃)</label><input class="tea-outline-input" type="number" name = "tea-temprature" id="tea-temprature" value="35" />
                 </div>
                 <div class="tea-outline-item"> 
-                    <label class="input-label" for="tea-brew-time">시간(sec)</label><input class="tea-outline-input" type="number" name = "tea-brew-time" id="tea-brew-time" value="100" />
+                    <label class="input-label" for="tea-brew-time">시간(초)</label><input class="tea-outline-input" type="number" name = "tea-brew-time" id="tea-brew-time" value="100" />
                 </div>
             </div>  
         </div>  
@@ -53,14 +53,14 @@
                     <td> 우린 잎</td>
                 </th>
                 <tr>
-                    <td>외형</td>
-                    <td><textarea  rows="4" cols="30" name='dry-leaf-appearence' id='dry-leaf-appearence'> </textarea>
-                    <td><textarea rows="4" cols="30" name='brew-leaf-appearence' id='brew-leaf-appearence'></textarea>
+                    <td class="table-row-name">외형</td>
+                    <td><textarea class="leaf-detail" name='dry-leaf-appearence' id='dry-leaf-appearence'> </textarea>
+                    <td><textarea class="leaf-detail" name='brew-leaf-appearence' id='brew-leaf-appearence'></textarea>
                 </tr>
                 <tr> 
-                    <td>향</td>
-                    <td><textarea rows="4" cols="30" name='dry-leaf-perfume' id='dry-leaf-perfume' > </textarea>
-                    <td><textarea rows="4" cols="30" name='brew-leaf-perfume' id='brew-leaf-perfume' ></textarea>
+                    <td class="table-row-name">향</td>
+                    <td><textarea class="leaf-detail" name='dry-leaf-perfume' id='dry-leaf-perfume' > </textarea>
+                    <td><textarea class="leaf-detail" name='brew-leaf-perfume' id='brew-leaf-perfume' ></textarea>
                 </tr>
             </table>
         </div>
@@ -91,7 +91,7 @@
                         <input type="radio" name="leaf-color" id="brown-leaf" value="갈색" />갈색                            
                     </div>
                 </div>       
-                <br />
+                <span class="d-block p-2 "> &nbsp; </span>
                 <div class="transparency">
                     <p> 투명도</p>
                     <div>
@@ -112,7 +112,7 @@
                     <input type="range" class="big-slider" name="taste-slider" id="taste-slider" min="1" max="10" value="1" />
                     <div class="survey-text"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
                 </div>
-                <br />
+                <span class="d-block p-0 "> &nbsp; </span>
                 {% for taste in ['풍부함', '기름짐', '훈연', '균형', '불쾌감', '후미', '수렴성', '매운맛', '신맛', '쓴맛', '짠맛', '단맛'] %}
                 <div class="survey-item">
                     <label class="survey-label" for="t{{ loop.index }}">{{ taste }}</label>
@@ -130,7 +130,7 @@
                     <input type="range" class="big-slider" name="perfume-slider" min="1" max="10" value="5" />
                     <div class="survey-text"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
                 </div>
-                <br />
+                <span class="d-block p-0 "> &nbsp; </span>
                 {% for perfume in ['식물향', '바다향', '우유향', '꽃향', '토양향', '목재향', '과일향', '탄향', '동물향', '광물향', '단향', '매운향'] %}
                 <div class="survey-item">
                     <label class="survey-label" for="p{{ loop.index }}">{{ perfume }}</label>
@@ -146,12 +146,12 @@
             <div class="finish">
                 <p> 피니쉬 </p>
                 <div>
-                    <input type="range" class="big-slider" id="finish-slider" min="1" max="5" value="1" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
+                    <input type="range" class="big-slider" name="finish-slider" min="1" max="5" value="1" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
                     <span class="value-indicator" id="tea-finish">1</span>
                     <div class="finish-text"><span>매우 길다</span><span>길다</span> <span>중간</span><span>짧다</span><span>매우 짧다</span></div>
                 </div>
             </div>
-            <br />
+            <span class="d-block p-0 "> &nbsp; </span>
             <div class="file-input">
                 <input class="full-width" type="file" class="btn btn-primary" name="file" />
             </div>
@@ -163,7 +163,7 @@
             </div>
         </div>
     </div>
-    <br />
+    <span class="d-block p-0 "> &nbsp; </span>
     <div class="submit-button">
         <button type="submit" class="btn btn-primary" id="submit-button">Add Note</button>
     </div>
@@ -185,8 +185,7 @@
 <style>
     .value-indicator {
         display: inline-block;
-        width: 6rem;
-        padding: 0 2rem;
+        width: 4rem;
         border: 1px solid black;
         text-align: center;
     }
@@ -194,13 +193,20 @@
         display: flex;
         justify-content: space-between;
     }
-
+    .table-row-name {
+        width: 2rem;
+        text-align: center;
+    }
+    .leaf-detail {
+        width: 11rem;
+        height: 6rem;
+    }
     .tea-outline-input {
-        width: 30rem;
+        width: 20rem;
         text-align: center;
     }
     .input-label {
-        width: 6rem;
+        width: 4rem;
         text-align: justify;
     }
     .survey-label {
@@ -213,9 +219,9 @@
         justify-content: center;
     }
     .survey-subject {
-        display: flex;
-        padding: 2rem;
+        display: flex;        
         justify-content: center;
+        padding: 0 2rem;
     }
     .taste-survey {
         justify-items: center;
@@ -227,11 +233,11 @@
     }
     .big-slider {
         display: inline-block;
-        width: 30rem;
+        width: 18rem;
     }
     .small-slider {
         display: inline-block;
-        width: 22rem;
+        width: 12rem;
     }
     span {
         display: inline-block;
@@ -251,39 +257,39 @@
         align-items: center;
     }
     .colored-row {
-        height: 2rem;
+        height: 1rem;
     }
     #gradient-background1 {
-        min-width: 5.14rem;
+        min-width: 3.42rem;
         background-image: linear-gradient(to right, white , #DDDDDD);;
     }
     #gradient-background2 {
-        min-width: 5.14rem;
+        min-width: 3.42rem;
         background-image: linear-gradient(to right, white , #94C056);;
     }
     #gradient-background3 {
-        min-width: 5.14rem;
+        min-width: 3.42rem;
         background-image: linear-gradient(to right, white , #FFD10D);;
     }
     #gradient-background4 {
-        min-width: 5.14rem;
+        min-width: 3.42rem;
         background-image: linear-gradient(to right, white , #BD7F41);;
     }
     #gradient-background5 {
-        min-width: 5.14rem;
+        min-width: 3.42rem;
         background-image: linear-gradient(to right, white , #F2773D);;
     }
     #gradient-background6 {
-        min-width: 5.14rem;
+        min-width: 3.42rem;
         background-image: linear-gradient(to right, white , #BB4642);;
     }
     #gradient-background7 {
-        min-width: 5.14rem;
+        min-width: 3.42rem;
         background-image: linear-gradient(to right, white , #975A3E);;
     }
     .transparency-text, .survey-text, .finish-text {
         display: flex;
-        width: 30rem;
+        width: 20rem;
         justify-content: space-between;
     }
     .submit-button {
@@ -298,7 +304,7 @@
         padding: 2rem;
     }
     .full-width {
-        width: 36rem
+        width: 24rem
     }
 
     #submit-button {

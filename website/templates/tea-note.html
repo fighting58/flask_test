@@ -2,7 +2,7 @@
 {% extends "base.html" %} {% block title %}Detailed Tea Note{% endblock %}
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<span class="d-block " style="height: 0.5rem;"> &nbsp; </span>
 <!-- 차 이미지 & 평점-->
 <div class="tea-image-class">
     <img class="tea-image" src="{{ url_for('static', filename= 'upload-images/') + note.image }}" />
@@ -14,37 +14,53 @@
 <!-- 차 이름 외 총평 -->
 <div class="tea-name-class">
     <h1>- {{ note.teaname}} -</h1>
+    {% if note.country or note.sailer %}
+    <div class="d-flex justify-content-center" style="gap: 2rem; margin: 0; padding:0; align-items: center;" >
+        {% if note.sailer %}
+        <button type="button" class="btn btn-info" data-toggle="popover" title="판매처" 
+                data-content="{{ note.sailer }}" 
+                style="font-size: 0.7rem; height: 1.2rem; padding:0 1.5rem 0.5rem 1.5rem; ">판매처
+        </button>
+        {% endif %}
+        {% if note.country %}
+        <button type="button" class="btn btn-lg btn-info" data-toggle="popover" title="원산지" 
+                data-content="{{ note.country }}" 
+                style="font-size: 0.7rem; height: 1.2rem; padding:0 1.5rem 0.5rem 1.5rem; ">원산지
+        </button>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="detailed-note">
         <p> {{ note.note }} </p>
     </div>
 </div>
 <br />
 <!-- 그래프 -->
-<div class="charts weight-temprature-time-group">  
+<div class="d-flex align-content-start flex-wrap justify-content-center" style="gap: 2rem;">  
     <div class="chart-item chart-group1">
         <div class="chart-element chart-group1-element"><canvas  id="weight-chart"></canvas></div>
         <div class="info-box">
-            <div> 무게 </div>
+            <div style="font-weight: bold; font-size: 1.1rem;"> 무게 </div>
             <div> {{ note.tea_quantity }} (g) </div>
         </div>
     </div>
     <div class="chart-item chart-group1">
         <div class="chart-element chart-group1-element"><canvas  id="temprature-chart"></canvas></div> 
         <div class="info-box">
-            <div> 온도 </div>
+            <div style="font-weight: bold; font-size: 1.1rem;"> 온도 </div>
             <div> {{ note.tea_temprature }} (℃) </div>
         </div>       
     </div>
     <div class="chart-item chart-group1">
         <div class="chart-element chart-group1-element"><canvas  id="time-chart"></canvas></div>  
         <div class="info-box">
-            <div> 시간 </div>
+            <div style="font-weight: bold; font-size: 1.1rem;"> 시간 </div>
             <div> {{ note.tea_brew_time }} (초) </div>
         </div>      
     </div>
 </div>
 <br />
-<div class="charts taste-perfume-group">       
+<div class="d-flex align-content-start flex-wrap justify-content-center" style="gap: 2rem;">    
     <!-- 맛 그래프 --> 
     <div class="chart-item chart-group2">         
         <div class="container">
@@ -68,28 +84,54 @@
         <div class="chart-element chart-group2-element"><canvas  id="perfume-chart"></canvas></div>  
     </div>    
 </div>
-<div class="d-flex align-content-start flex-wrap justify-content-center">
-    <div class="card" style="width: 40rem;">
+{% set TRANSPARENCY = ["매우 맑음", "맑음", "중간", "탁함", "매우 탁함"] %}
+{% set FINISH = ["매우 길다", "길다", "중간", "짧다", "매우 짧다"] %}
+<div class="d-flex flex-column bd-highlight mb-3 justify-content-center align-items-center" style="gap: 1rem;">
+    <div class="d-flex justify-content-center" style="gap: 1rem;">
+        <div class="progress" style="width: 20rem;">
+            <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ note.transparency * 20 }}%">
+                투명도
+            </div>
+        </div>
+        <div>{{ TRANSPARENCY[note.transparency - 1] }}</div>
+    </div>
+    <div class="d-flex justify-content-center" style="gap: 1rem;">
+        <div class="progress bd-highlight" style="width: 20rem;">
+            <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ note.finish * 20 }}%">
+                피니쉬
+            </div>
+        </div>
+        <div>{{ FINISH[note.transparency - 1] }}</div>
+    </div>
+        
+</div>
+
+</div>
+<div class="d-flex align-content-start flex-wrap justify-content-center" style="gap: 0.5rem;">
+    <div class="card" style="width: 20rem;">
         <div class="card-body">
         <h5 class="card-title">마른 잎</h5>
         <h6 class="card-subtitle mb-2 text-muted">외형</h6>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         </div>
     </div>
-    <div class="card" style="width: 40rem;">
+    <div class="card" style="width: 20rem;">
         <div class="card-body">
         <h5 class="card-title">우린 잎</h5>
         <h6 class="card-subtitle mb-2 text-muted">외형</h6>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         </div>
     </div>
-    <div class="card" style="width: 40rem;">
+</div>
+<span class="d-block " style="height: 0.5rem;"> &nbsp; </span>
+<div class="d-flex align-content-start flex-wrap justify-content-center" style="gap: 0.5rem;">
+    <div class="card" style="width: 20rem;">
         <div class="card-body">
          <h6 class="card-subtitle mb-2 text-muted">향</h6>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         </div>
     </div>
-    <div class="card" style="width: 40rem;">
+    <div class="card" style="width: 20rem;">
         <div class="card-body">
         <h6 class="card-subtitle mb-2 text-muted">향</h6>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -144,6 +186,7 @@
             }]
         },
         options: {
+            cutout: '70%',
             plugins: {
                 legend:{
                     display: false,
@@ -244,14 +287,14 @@
         display: flex;
         flex-direction: column;
         text-align: center;
-        height: 15rem;
+        height: 10rem;
         justify-content: center;
         align-items: center;
     }
     .detailed-note {
         display:flex;
-        width: 50rem;
-        padding: 3rem 0;
+        width: 90vw;
+        padding: 1rem 0;
         text-align: center;
         justify-content: center;
         align-items: center;
@@ -261,7 +304,7 @@
         margin:0 auto;
     }
     .tea-image {
-        width: 50rem;
+        width: 30rem;
     }
     .charts {
         margin:0 auto;
@@ -310,14 +353,14 @@
     }
     .chart-group2, .chart-group2-element {
         position: relative;
-        width: 30rem;
-        height:30rem;
+        width: 20rem;
+        height:20rem;
     }
     .chart-group2 {
-        height: 32rem;
+        height: 22rem;
     }
     .progress {
-        height: 2rem;
+        height: 1.5rem;
     }
   </style>
   {% endblock %}
