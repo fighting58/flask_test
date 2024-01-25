@@ -17,7 +17,7 @@ def file_upload(userid, file):
     _, ext = os.path.splitext(file.filename)
     fn = str(userid) + str(datetime.now().isoformat(timespec='seconds')) + ext
     fn = secure_filename(fn)
-    file.save(os.path.join('C:/Users/Kim/Documents/PythonProjects/flask_test-1/website/static/upload-images', fn))
+    file.save(os.path.join('C:/Users/USER/PycharmProjects/flask_test/website/static/upload-images', fn))
     return fn
 
 def split_string(input_str, max_length=20):
@@ -82,22 +82,23 @@ def delete_note():
 @login_required
 def teanote_form():
     if request.method == 'POST': 
+        print(request.form)
         teaname = request.form.get('teaname')
         sailer = request.form.get('sailer')
         country = request.form.get('country')
         type_of_tea = request.form.getlist('tea-types')[0]
 
-        tea_quantity = request.form.get('tea_quantity')
-        tea_temprature = request.form.get('tea_temprature')
-        tea_brew_time = request.form.get('tea_brew_time')
+        tea_quantity = request.form.get('tea-quantity')
+        tea_temprature = request.form.get('tea-temprature')
+        tea_brew_time = request.form.get('tea-brew-time')
 
         grade = request.form.get('grade')
         dry_leaf_appearence = request.form.get('dry_leaf_appearence')
-        brew_leaf_appearence = request.form.get('brew_leaf_appearence')
-        dry_leaf_perfume = request.form.get('dry_leaf_perfume')
-        brew_leaf_perfume = request.form.get('brew_leaf_perfume')
+        brew_leaf_appearence = request.form.get('brew-leaf-appearence')
+        dry_leaf_perfume = request.form.get('dry-leaf-perfume')
+        brew_leaf_perfume = request.form.get('brew-leaf-perfume')
 
-        strength_of_taste = request.form.get('strength_of_taste')
+        strength_of_taste = request.form.get('taste-slider')
         t1 = request.form.get('t1')
         t2 = request.form.get('t2')
         t3 = request.form.get('t3')
@@ -111,7 +112,7 @@ def teanote_form():
         t11 = request.form.get('t11')
         t12 = request.form.get('t12')
 
-        strength_of_perfume = request.form.get('strength_of_perfume')
+        strength_of_perfume = request.form.get('perfume-slider')
         p1 = request.form.get('p1')
         p2 = request.form.get('p2')
         p3 = request.form.get('p3')

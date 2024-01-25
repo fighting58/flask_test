@@ -3,28 +3,98 @@
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-차이름 : {{ note.teaname }}
-판매처 : {{ note.saler }}
-원산지 : {{ note.country }}
-차종류 : {{ note.type_of_tea }}
-무게(g) : {{ note.tea_quatity }}
-온도(℃) : {{ note.tea_temprature }}
-시간(초) : {{ note.tea_brew_time }}
-평점: {{ note.grade }}
-
-
-
-
-<div class="charts">    
-    <div class="chart-item">
-        <p class="chart-title"> 맛</p>
-        <div class="chart-element"><canvas  id="taste_chart"></canvas></div>        
+<!-- 차 이미지 & 평점-->
+<div class="tea-image-class">
+    <img class="tea-image" src="{{ url_for('static', filename= 'upload-images/') + note.image }}" />
+    <div>
+        <span>{{ '★' * note.grade }}</span><span>{{ '☆' * (5 - note.grade) }}</span>
     </div>
-    <div class="chart-item">
-        <p class="chart-title"> 향</p>
-        <div class="chart-element"><canvas  id="perfume_chart"></canvas></div>        
+</div>
+<br />
+<!-- 차 이름 외 총평 -->
+<div class="tea-name-class">
+    <h1>- {{ note.teaname}} -</h1>
+    <div class="detailed-note">
+        <p> {{ note.note }} </p>
     </div>
-    
+</div>
+<br />
+<!-- 그래프 -->
+<div class="charts weight-temprature-time-group">  
+    <div class="chart-item chart-group1">
+        <div class="chart-element chart-group1-element"><canvas  id="weight-chart"></canvas></div>
+        <div class="info-box">
+            <div> 무게 </div>
+            <div> {{ note.tea_quantity }} (g) </div>
+        </div>
+    </div>
+    <div class="chart-item chart-group1">
+        <div class="chart-element chart-group1-element"><canvas  id="temprature-chart"></canvas></div> 
+        <div class="info-box">
+            <div> 온도 </div>
+            <div> {{ note.tea_temprature }} (℃) </div>
+        </div>       
+    </div>
+    <div class="chart-item chart-group1">
+        <div class="chart-element chart-group1-element"><canvas  id="time-chart"></canvas></div>  
+        <div class="info-box">
+            <div> 시간 </div>
+            <div> {{ note.tea_brew_time }} (초) </div>
+        </div>      
+    </div>
+</div>
+<br />
+<div class="charts taste-perfume-group">       
+    <!-- 맛 그래프 --> 
+    <div class="chart-item chart-group2">         
+        <div class="container">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ note.strength_of_taste * 10 }}%">
+                맛의 강도
+              </div>
+            </div>
+        </div>
+        <div class="chart-element chart-group2-element"><canvas  id="taste-chart"></canvas></div> 
+    </div>
+    <!-- 향 그래프 -->
+    <div class="chart-item chart-group2">             
+        <div class="container">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" style="width:{{ note.strength_of_perfume * 10 }}%">
+                향의 강도
+              </div>
+            </div>
+        </div> 
+        <div class="chart-element chart-group2-element"><canvas  id="perfume-chart"></canvas></div>  
+    </div>    
+</div>
+<div class="d-flex align-content-start flex-wrap justify-content-center">
+    <div class="card" style="width: 40rem;">
+        <div class="card-body">
+        <h5 class="card-title">마른 잎</h5>
+        <h6 class="card-subtitle mb-2 text-muted">외형</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+    </div>
+    <div class="card" style="width: 40rem;">
+        <div class="card-body">
+        <h5 class="card-title">우린 잎</h5>
+        <h6 class="card-subtitle mb-2 text-muted">외형</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+    </div>
+    <div class="card" style="width: 40rem;">
+        <div class="card-body">
+         <h6 class="card-subtitle mb-2 text-muted">향</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+    </div>
+    <div class="card" style="width: 40rem;">
+        <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">향</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -32,9 +102,75 @@
 {{ super() }}
 {% set taste_data = [note.t1, note.t2, note.t3, note.t4, note.t5, note.t6, note.t7, note.t8, note.t9, note.t10, note.t11, note.t12] %}
 {% set perfume_data = [note.p1, note.p2, note.p3, note.p4, note.p5, note.p6, note.p7, note.p8, note.p9, note.p10, note.p11, note.p12] %}
+{% set MAXIMUM_LIMIT = [20, 100, 600] %}
 <script>
-    const ctx = document.getElementById('taste_chart');
-    const ctx2 = document.getElementById('perfume_chart');
+    const ctx = document.getElementById('taste-chart');
+    const ctx2 = document.getElementById('perfume-chart');
+    const ctx_weight = document.getElementById('weight-chart');
+    const ctx_temprature = document.getElementById('temprature-chart');
+    const ctx_time = document.getElementById('time-chart');
+
+    const weigthChart = new Chart(ctx_weight, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [{{ note.tea_quantity }}, {{ MAXIMUM_LIMIT[0] - note.tea_quantity }}],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(245, 245, 245)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend:{
+                    display: false,
+                } 
+            }            
+        }}
+    );
+    const tempratureChart = new Chart(ctx_temprature, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [{{ note.tea_temprature }}, {{ MAXIMUM_LIMIT[1] - note.tea_temprature }}],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            plugins: {
+                legend:{
+                    display: false,
+                } 
+            }            
+        }}
+    );
+    const timeChart = new Chart(ctx_time, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [{{ note.tea_brew_time }}, {{ MAXIMUM_LIMIT[2] - note.tea_brew_time }}],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            plugins: {
+                legend:{
+                    display: false,
+                } 
+            }            
+        }}
+    );
 
     const tasteChart = new Chart(ctx, {
         type: 'radar',
@@ -104,22 +240,84 @@
   {% block style %}
   {{ super() }}
   <style>
+    .tea-name-class {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        height: 15rem;
+        justify-content: center;
+        align-items: center;
+    }
+    .detailed-note {
+        display:flex;
+        width: 50rem;
+        padding: 3rem 0;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+    .tea-image-class {
+        text-align: center;
+        margin:0 auto;
+    }
+    .tea-image {
+        width: 50rem;
+    }
     .charts {
+        margin:0 auto;
         display: flex;
         text-align: center;
-        flex-direction: row;
+        align-items: center;     
+        justify-content: center;   
+        justify-items: center;
+    }
+    .info-box {
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        
-        justify-content: space-around;
+        margin: 0 auto;
+        position:relative;
+        top: 20%;
+        width: 60%;
+        height: 60%;
+        border-radius: 50%;
+        z-index: 1;
+        background-color: rgb(68, 162, 206);
+    }
+    .weight-temprature-time-group {
+        gap: 5rem;
+    }
+    .taste-perfume-group {
+        gap: 5rem;
+        height: 35rem;
     }
     .chart-item {
-        flex: none;
-        width: 30%;
-        height: 30%;
-    }
-    .chart-item .child {
-        justify-items: center;
+        margin:0;
+        position: relative;
+        justify-content: space-evenly;
         align-items: center;
+    }
+    .chart-element {
+        justify-items: center;
+        position: absolute;
+        margin: 0 auto;
+        z-index: 2;
+    }
+    .chart-group1, .chart-group1-element {
+        width: 10rem;
+        height:10rem;
+    }
+    .chart-group2, .chart-group2-element {
+        position: relative;
+        width: 30rem;
+        height:30rem;
+    }
+    .chart-group2 {
+        height: 32rem;
+    }
+    .progress {
+        height: 2rem;
     }
   </style>
   {% endblock %}
