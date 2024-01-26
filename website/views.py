@@ -17,7 +17,7 @@ def file_upload(userid, file):
     _, ext = os.path.splitext(file.filename)
     fn = str(userid) + str(datetime.now().isoformat(timespec='seconds')) + ext
     fn = secure_filename(fn)
-    file.save(os.path.join('C:/Users/Kim/Documents/PythonProjects/flask_test/website/static/upload-images', fn))
+    file.save(os.path.join('C:/Users/USER/PycharmProjects/flask_test/website/static/upload-images', fn))
     return fn
 
 def split_string(input_str, max_length=20):
@@ -41,6 +41,7 @@ def split_string(input_str, max_length=20):
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    page = request.args.get('page')
     if request.method == 'POST': 
         note = request.form.get('note')#Gets the note from the HTML 
 
@@ -63,7 +64,7 @@ def home():
             db.session.commit()
             flash('Note added!', category='success')
 
-    return render_template("home.html", notes=Note.query.all(), user=current_user, users=User)
+    return render_template("home.html", notes=Note.query.all(), user=current_user, users=User, page=page)
 
 
 @views.route('/delete-note', methods=['POST'])
@@ -93,7 +94,7 @@ def teanote_form():
         tea_brew_time = request.form.get('tea-brew-time')
 
         grade = request.form.get('grade')
-        dry_leaf_appearence = request.form.get('dry_leaf_appearence')
+        dry_leaf_appearence = request.form.get('dry-leaf-appearence')
         brew_leaf_appearence = request.form.get('brew-leaf-appearence')
         dry_leaf_perfume = request.form.get('dry-leaf-perfume')
         brew_leaf_perfume = request.form.get('brew-leaf-perfume')
@@ -189,7 +190,7 @@ def teanote_form():
             flash('Note added!', category='success')
 
 
-        return redirect(url_for('views.home', _method='POST', notes=Note.query.all(), user=current_user, users=User))
+        return redirect(url_for('views.home', _method='POST', notes=Note.query.all(), user=current_user, users=User, page=1))
 
     return render_template("teanote_form.html", user=current_user)
 

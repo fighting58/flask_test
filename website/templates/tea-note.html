@@ -64,7 +64,7 @@
     <!-- 맛 그래프 --> 
     <div class="chart-item chart-group2">         
         <div class="container">
-            <div class="progress">
+            <div class="progress" style="width:20rem;">
               <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ note.strength_of_taste * 10 }}%">
                 맛의 강도
               </div>
@@ -75,7 +75,7 @@
     <!-- 향 그래프 -->
     <div class="chart-item chart-group2">             
         <div class="container">
-            <div class="progress">
+            <div class="progress" style="width:20rem;">
               <div class="progress-bar progress-bar-success" role="progressbar" style="width:{{ note.strength_of_perfume * 10 }}%">
                 향의 강도
               </div>
@@ -112,14 +112,14 @@
         <div class="card-body">
         <h5 class="card-title">마른 잎</h5>
         <h6 class="card-subtitle mb-2 text-muted">외형</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <p class="card-text">{{ note.dry_leaf_appearence }}</p>
         </div>
     </div>
     <div class="card" style="width: 20rem;">
         <div class="card-body">
         <h5 class="card-title">우린 잎</h5>
         <h6 class="card-subtitle mb-2 text-muted">외형</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <p class="card-text">{{ note.brew_leaf_appearence }}</p>
         </div>
     </div>
 </div>
@@ -128,13 +128,13 @@
     <div class="card" style="width: 20rem;">
         <div class="card-body">
          <h6 class="card-subtitle mb-2 text-muted">향</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <p class="card-text">{{ note.dry_leaf_perfume }}</p>
         </div>
     </div>
     <div class="card" style="width: 20rem;">
         <div class="card-body">
         <h6 class="card-subtitle mb-2 text-muted">향</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <p class="card-text">{{ note.brew_leaf_perfume }}</p>
         </div>
     </div>
 </div>
@@ -326,7 +326,13 @@
         height: 60%;
         border-radius: 50%;
         z-index: 1;
-        background-color: rgb(68, 162, 206);
+        background-color: #c0c0f1;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#d17070));        
+        background-image: -webkit-radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(186,209,242,1) 60%);
+        background-image: -moz-radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(186,209,242,1) 60%);
+        background-image: -ms-radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(186,209,242,1) 60%);
+        background-image: -o-radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(186,209,242,1) 60%);
+        background: radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(186,209,242,1) 60%);
     }
     .weight-temprature-time-group {
         gap: 5rem;
