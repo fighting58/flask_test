@@ -1,6 +1,6 @@
-{% extends "base.html" %} {% block title %}새 노트 작성{% endblock %} 
+{% extends "base.html" %} {% block title %}New Note{% endblock %} 
 {% block content %}
-<h1 class="page-title">New Note</h1>
+<h1 class="page-title">Note 수정</h1>
 
 {% set tea_kinds = {"백차":"white-tea", "황차": "yellow-tea", "녹차":"green-tea", "우롱차":"oorong", "홍차":"red-tea", "보이차":"boi", "기타": 'etc'} %}
 
@@ -13,19 +13,23 @@
                 <div class="p-2 bd-highlight">
                     <div class="d-flex justify-content-between bd-highlight" style="width: 25rem;" >
                         {% for tea_key, tea_value in tea_kinds.items() %}
-                        <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" /> {{ tea_key }}
+                            {% if note.type_of_tea == tea_key %}
+                            <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" checked="true" />{{ tea_key }}
+                            {% else %}
+                            <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" />{{ tea_key }}
+                            {% endif%}
                         {% endfor %}
                     </div>
                 </div>
                 <div class="p-2 bd-highlight">
                     <div class="tea-outline-item"> 
-                        <label class="input-label" for="teaname">차이름</label><input class="tea-outline-input" type="text" name = "teaname" id="teaname" />
+                        <label class="input-label" for="teaname">차이름</label><input class="tea-outline-input" type="text" name = "teaname" id="teaname"  value="{{ note.teaname }}"/>
                     </div>
                     <div class="tea-outline-item"> 
-                        <label class="input-label" for="sailer">판매처</label><input class="tea-outline-input" type="text" name = "sailer" id="sailer" />
+                        <label class="input-label" for="sailer">판매처</label><input class="tea-outline-input" type="text" name = "sailer" id="sailer" value="{{ note.sailer }}" />
                     </div>
                     <div class="tea-outline-item"> 
-                        <label class="input-label" for="country">원산지</label><input class="tea-outline-input" type="text" name = "country" id="country" />
+                        <label class="input-label" for="country">원산지</label><input class="tea-outline-input" type="text" name = "country" id="country" value="{{ note.country }}" />
                     </div>
                 </div>
             </div>
@@ -34,17 +38,17 @@
         <div class="bd-highlight mt-1">
             <div class="d-flex flex-column align-items-center bd-highlight">
                 <div class="bd-highlight">
-                    <label class="input-label" for="country">평점: </label><input type="range" class="big-slider" min="1" max="5" name="grade" value="1" />
+                    <label class="input-label" for="country">평점: </label><input type="range" class="big-slider" min="1" max="5" name="grade" value="{{ note.grade }}" />
                 </div>
                 <div class="p-2 bd-highlight">
                     <div class="tea-outline-item">    
-                        <label class="input-label" for="tea-quantity">무게(g)</label><input class="tea-outline-input" type="number" name = "tea-quantity" id="tea-quantity" value="5" /> 
+                        <label class="input-label" for="tea-quantity">무게(g)</label><input class="tea-outline-input" type="number" name = "tea-quantity" id="tea-quantity" value="{{ note.tea_quantity }}" /> 
                     </div>
                     <div class="tea-outline-item"> 
-                        <label class="input-label" for="tea-temprature">온도(℃)</label><input class="tea-outline-input" type="number" name = "tea-temprature" id="tea-temprature" value="35" />
+                        <label class="input-label" for="tea-temprature">온도(℃)</label><input class="tea-outline-input" type="number" name = "tea-temprature" id="tea-temprature" value="{{ note.tea_temprature }}" />
                     </div>
                     <div class="tea-outline-item"> 
-                        <label class="input-label" for="tea-brew-time">시간(초)</label><input class="tea-outline-input" type="number" name = "tea-brew-time" id="tea-brew-time" value="100" />
+                        <label class="input-label" for="tea-brew-time">시간(초)</label><input class="tea-outline-input" type="number" name = "tea-brew-time" id="tea-brew-time" value="{{ note.tea_brew_time }}" />
                     </div>
                 </div>  
             </div>
@@ -58,17 +62,18 @@
                 </th>
                 <tr>
                     <td class="table-row-name">외형</td>
-                    <td><textarea class="leaf-detail" name='dry-leaf-appearence' id='dry-leaf-appearence'> </textarea>
-                    <td><textarea class="leaf-detail" name='brew-leaf-appearence' id='brew-leaf-appearence'></textarea>
+                    <td><textarea class="leaf-detail" name='dry-leaf-appearence' id='dry-leaf-appearence'>{{ note.dry_leaf_appearence }}</textarea>
+                    <td><textarea class="leaf-detail" name='brew-leaf-appearence' id='brew-leaf-appearence'>{{ note.brew_leaf_appearence }}</textarea>
                 </tr>
                 <tr> 
                     <td class="table-row-name">향</td>
-                    <td><textarea class="leaf-detail" name='dry-leaf-perfume' id='dry-leaf-perfume' > </textarea>
-                    <td><textarea class="leaf-detail" name='brew-leaf-perfume' id='brew-leaf-perfume' ></textarea>
+                    <td><textarea class="leaf-detail" name='dry-leaf-perfume' id='dry-leaf-perfume' >{{ note.dry_leaf_perfume }}</textarea>
+                    <td><textarea class="leaf-detail" name='brew-leaf-perfume' id='brew-leaf-perfume' >{{ note.brew_leaf_perfume }}</textarea>
                 </tr>
             </table>
         </div>
         <!-- 수색, 투명도 -->
+        {% set colored_leaf = {"미색":"off-white-leaf", "연두":"light-green-leaf", "노랑":"yellow-leaf", "호박":"amber-leaf", "주황":"orange-leaf", "빨강":"red-leaf", "갈색":"brown-leaf"} %}
         <div class="bd-highlight mt-n4">
              <div class="d-flex flex-column align-items-center bd-highlight">
                 <div class="p-2 bd-highlight">                    
@@ -88,13 +93,13 @@
                     </div>            
                     <div>
                         <div class="d-flex justify-content-around bd-highlight">
-                            <input type="radio" name="leaf-color" id="off-white-leaf" value="미색" />미색
-                            <input type="radio" name="leaf-color" id="light-green-leaf" value="연두" />연두
-                            <input type="radio" name="leaf-color" id="yellow-leaf" value="노랑" />노랑
-                            <input type="radio" name="leaf-color" id="amber-leaf" value="호박" />호박
-                            <input type="radio" name="leaf-color" id="orange-leaf" value="주황" />주황
-                            <input type="radio" name="leaf-color" id="red-leaf" value="빨강" />빨강
-                            <input type="radio" name="leaf-color" id="brown-leaf" value="갈색" />갈색        
+                            {% for color_key, color_value in colored_leaf.items() %}
+                            {% if note.leaf_color == color_key %}
+                                <input type="radio" name="leaf-color" id="{{ color_value}}" value="{{ color_key }}" checked="true" />{{ color_key }}
+                            {% else %}
+                                <input type="radio" name="leaf-color" id="{{ color_value}}" value="{{ color_key }}" />{{ color_key }}
+                            {% endif %} {% endfor %}
+     
                         </div>                    
                     </div>
                 </div>    
@@ -102,8 +107,8 @@
                 <div class="p-2 bd-highlight">
                     <div> 투명도</div>
                     <div>
-                        <input type="range" class="big-slider" name="transparency-slider" min="1" max="5" value="3" oninput="document.getElementById('tea-transparency').innerHTML=this.value;" />
-                        <span class="value-indicator" id="tea-transparency">3</span>
+                        <input type="range" class="big-slider" name="transparency-slider" min="1" max="5" value="{{ note.transparency }}" oninput="document.getElementById('tea-transparency').innerHTML=this.value;" />
+                        <span class="value-indicator" id="tea-transparency">{{ note.transparency }}</span>
                         <div class="d-flex justify-content-between" style="width: 21rem;">
                             <span>매우 맑음</span><span>맑음</span><span>중간</span><span>탁함</span><span>매우 탁함</span>
                         </div>
@@ -120,7 +125,7 @@
                         <div class="bd-highlight">
                             <div class="d-flex flex-column align-items-center bd-highlight">
                                 <div class="bd-highlight">
-                                    <input type="range" class="big-slider" name="taste-slider" id="taste-slider" min="1" max="10" value="1" />
+                                    <input type="range" class="big-slider" name="taste-slider" id="taste-slider" min="1" max="10" value="{{ note.strength_of_taste }}" />
                                     <div class="d-flex justify-content-between bd-highlight">
                                         <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
                                     </div>
@@ -130,10 +135,11 @@
                     </div>               
                 </div>
                 {% for taste in ['풍부함', '기름짐', '훈연', '균형', '불쾌감', '후미', '수렴성', '매운맛', '신맛', '쓴맛', '짠맛', '단맛'] %}
+                {% set tastes = [note.t1, note.t2, note.t3, note.t4, note.t5, note.t6, note.t7, note.t8, note.t9, note.t10, note.t11, note.t12] %}
                 <div class="bd-highlight">
                     <label class="survey-label" for="t{{ loop.index }}">{{ taste }}</label>
-                    <input type="range" class="small-slider" name="t{{ loop.index }}" id="t{{ loop.index }}" min="1" max="10" value="5" oninput="document.getElementById('t{{ loop.index }}_value').innerHTML=this.value;"/>
-                    <span class="value-indicator" id="t{{ loop.index }}_value">5</span>
+                    <input type="range" class="small-slider" name="t{{ loop.index }}" id="t{{ loop.index }}" min="1" max="10" value="{{ tastes[loop.index-1] }}" oninput="document.getElementById('t{{ loop.index }}_value').innerHTML=this.value;"/>
+                    <span class="value-indicator" id="t{{ loop.index }}_value">{{ tastes[loop.index-1] }}</span>
                 </div>
                 {% endfor %}
             </div>
@@ -147,7 +153,7 @@
                         <div class="bd-highlight">
                             <div class="d-flex flex-column align-items-center bd-highlight">
                                 <div class="bd-highlight">
-                                    <input type="range" class="big-slider" name="perfume-slider" min="1" max="10" value="5" />
+                                    <input type="range" class="big-slider" name="perfume-slider" min="1" max="10" value="{{ note.strength_of_perfume }}" />
                                     <div class="d-flex justify-content-between bd-highlight">
                                         <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
                                     </div>
@@ -157,10 +163,11 @@
                     </div>
                 </div>
                 {% for perfume in ['식물향', '바다향', '우유향', '꽃향', '토양향', '목재향', '과일향', '탄향', '동물향', '광물향', '단향', '매운향'] %}
+                {% set perfumes = [note.p1, note.p2, note.p3, note.p4, note.p5, note.p6, note.p7, note.p8, note.p9, note.p10, note.p11, note.p12] %}
                 <div class="bd-highlight">
                     <label class="survey-label" for="p{{ loop.index }}">{{ perfume }}</label>
-                    <input type="range" class="small-slider" name="p{{ loop.index }}" id="p{{ loop.index }}" min="1" max="10" value="5" oninput="document.getElementById('p{{ loop.index }}_value').innerHTML=this.value;" />
-                    <span class="value-indicator" id="p{{ loop.index }}_value">5</span>
+                    <input type="range" class="small-slider" name="p{{ loop.index }}" id="p{{ loop.index }}" min="1" max="10" value="{{ perfumes[loop.index-1] }}" oninput="document.getElementById('p{{ loop.index }}_value').innerHTML=this.value;" />
+                    <span class="value-indicator" id="p{{ loop.index }}_value">{{ perfumes[loop.index-1] }}</span>
                 </div>
                 {% endfor %}
             </div>
@@ -170,8 +177,8 @@
             <div class="d-flex flex-column align-items-center bd-highlight">
                 <div class="bd-highlight"> 피니쉬 </div>
                 <div class="bd-highlight">
-                    <input type="range" class="big-slider" name="finish-slider" min="1" max="5" value="1" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
-                    <span class="value-indicator" id="tea-finish">1</span>
+                    <input type="range" class="big-slider" name="finish-slider" min="1" max="5" value="{{ note.finish }}" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
+                    <span class="value-indicator" id="tea-finish">{{ note.finish }}</span>
                     <div class="d-flex justify-content-between" style="width: 21rem;">
                         <span>매우 길다</span><span>길다</span> <span>중간</span><span>짧다</span><span>매우 짧다</span>
                     </div>
@@ -185,7 +192,7 @@
             <div class="d-flex flex-column align-items-center bd-highlight">
                 <div class="hd-highlight">총 평</div>
                 <div class="hd-highlight" style="width: 25rem;">
-                    <textarea class="form-control" name="note" id="note" style="height:6.5rem;"></textarea>
+                    <textarea class="form-control" name="note" id="note" style="height:6.5rem;">{{ note.note }}</textarea>
                 </div>
             </div>
         </div>
@@ -194,22 +201,14 @@
     <div class="d-flex flex-column align-items-center bd-highlight">
         <p class="text-muted" style="font-size: 0.8rem;">** 파일이 선택되었는지 확인하세요 **</p>
         <div class="bd-highlight mt-n3">
-            <button type="submit" class="btn btn-primary" id="submit-button" style="width: 10rem;">노트 저장</button>
+            <button type="submit" class="btn btn-primary" id="submit-button" style="width: 10rem;">수정/저장</button>
         </div>
     </div>
 
 </form>
 
 {% endblock %}
-<!--
-{% block javascript %}
-<script>
-    const form = document.getElementById('teanote_form'); // 폼 엘리먼트
-    form.querySelector('#oorong').checked = true; // 체크박스 체크 여부(checked)
-    form.querySelector('#off-white-leaf').checked = true; // 체크박스 체크 여부(checked)
-</script>
-{% endblock %}
--->
+
 {% block style %}
 {{ super() }}
 <style>

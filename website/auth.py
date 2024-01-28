@@ -20,7 +20,7 @@ def login():
                 flash('Logged in successfully!', category='success')
                 session.clear()
                 login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.home', page=1))   # home으로 이동
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
