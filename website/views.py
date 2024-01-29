@@ -8,6 +8,7 @@ import json
 import os
 
 views = Blueprint('views', __name__)
+UPLOAD_FOLDER = 'C:/Users/USER/PycharmProjects/flask_test/website/static/upload-images'
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -17,7 +18,7 @@ def file_upload(userid, file):
     _, ext = os.path.splitext(file.filename)
     fn = str(userid) + str(datetime.now().isoformat(timespec='seconds')) + ext
     fn = secure_filename(fn)
-    file.save(os.path.join('C:/Users/Kim/Documents/PythonProjects/flask_test/website//static/upload-images', fn))
+    file.save(os.path.join(UPLOAD_FOLDER, fn))
     return fn
 
 def split_string(input_str, max_length=20):
@@ -36,35 +37,37 @@ def split_string(input_str, max_length=20):
     result.append(current_line.strip())    
     return result
 
+def filtered_notes(filter_type, filter_content):
+    if filter_type=='차명':
+        notes= Note.query.filter(Note.teaname.contains(filter_content)).all()
+    elif filter_type=='필명':
+        userid = User.query.filter_by(pen_name=filter_content).first().id
+        notes= Note.query.filter_by(user_id=userid).all()
+    elif filter_type=='종류':
+        notes= Note.query.filter_by(type_of_tea=filter_content).all()
+    else:
+        notes=Note.query.all()
+    return notes
+
 
 @views.route('/', methods=['GET', 'POST'])
+@views.route('/<filter_type>/<filter_content>', methods=["GET", "POST"])
 @login_required
-def home():
+def home(filter_type="전체", filter_content="전체"):
     page = request.args.get('page')
+    print("page= ", page)
+    if not page:
+        page = 1
 
-    if request.method == 'POST': 
-        note = request.form.get('note')#Gets the note from the HTML 
+    if request.method =="POST":
+        filter_type, filter_content = request.form.get('filter-type'), request.form.get('filter-content')
+        page = 1
 
-        if 'file' not in request.files:
-            flash('No file part', category='error')
-            return redirect(request.url)
-        
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file', category="error")
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = file_upload(current_user.id, file)           
-
-        if len(note) < 1:
-            flash('Note is too short!', category='error') 
-        else:
-            new_note = Note(note=note, image=filename, user_id=current_user.id)  #providing the schema for the note 
-            db.session.add(new_note) #adding the note to the database 
-            db.session.commit()
-            flash('Note added!', category='success')
-
-    return render_template("home.html", notes=Note.query.all(), user=current_user, users=User, page=page)
+    notes= filtered_notes(filter_type, filter_content)
+    if request.method =="POST":
+        return redirect(url_for('views.home', filter_type=filter_type, filter_content=filter_content))    
+    else:
+        return render_template('home.html', filter_type=filter_type, filter_content=filter_content, notes=notes, user=current_user, users=User, page=page)
 
 
 @views.route('/delete-note', methods=['POST'])
@@ -73,8 +76,13 @@ def delete_note():
     noteId = note['noteId']
     note = Note.query.get(noteId)
     if note:
-        if (note.user_id == current_user.id) or (current_user.nickname == '관리자'):
-            flash('삭제되었습니다.', category='success')
+        if (note.user_id == current_user.id) or (current_user.tier == 1):            
+            try:
+                os.unlink(os.path.join(UPLOAD_FOLDER, note.image))
+                flash('삭제되었습니다.', category='success')
+            except Exception as e:
+                print(e)
+                flash('노트는 삭제되었지만 관련 파일은 찾지 못했습니다.', category='error')
             db.session.delete(note)
             db.session.commit()
     return jsonify({})
@@ -88,7 +96,6 @@ def teanote_form():
         sailer = request.form.get('sailer')
         country = request.form.get('country')
         type_of_tea = request.form.getlist('tea-types')[0]
-        print(type_of_tea)
 
         tea_quantity = request.form.get('tea-quantity')
         tea_temprature = request.form.get('tea-temprature')
@@ -276,7 +283,7 @@ def teanote_modify(noteid):
             brief_note3 = splited_note[2]
             brief_note4 = "..."
 
-        date =  datetime.now().replace(microsecond=0)
+        date = datetime.now().replace(microsecond=0)
 
         file = request.files['file']
         if file and allowed_file(file.filename):
@@ -338,7 +345,6 @@ def teanote_modify(noteid):
             db.session.add(this_note)
             db.session.commit()
             flash('Note added!', category='success')
-
         return redirect(url_for('views.home', _method='POST', notes=Note.query.all(), user=current_user, users=User, page=1))
 
     return render_template("teanote_modify.html", note=this_note, user=current_user)

@@ -41,27 +41,27 @@ def logout():
 def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
-        nickname = request.form.get('nickName')
+        pen_name = request.form.get('nickName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
         user = User.query.filter_by(email=email).first()
-        nick = User.query.filter_by(nickname=nickname).first()
+        pen = User.query.filter_by(pen_name=pen_name).first()
 
-        if nick:
+        if pen:
             flash('이미 사용 중인 별명입니다.', category='error')
         elif user:
             flash('이미 등록된 계정입니다.', category='error')
         elif len(email) < 4:
             flash('Email must be greater than 3 characters.', category='error')
-        elif len(nickname) < 2:
+        elif len(pen_name) < 2:
             flash('First name must be greater than 1 character.', category='error')
         elif password1 != password2:
             flash('Passwords don\'t match.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            new_user = User(email=email, nickname=nickname, password=generate_password_hash(
+            new_user = User(email=email, pen_name=pen_name, tier=3, password=generate_password_hash(
                 password1, method='pbkdf2:sha256:600000'))
             db.session.add(new_user)
             db.session.commit()

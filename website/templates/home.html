@@ -21,9 +21,9 @@
         <div class="note-content">&nbsp;{{ note.brief_note3 }}</div>
         <div class="note-content">&nbsp;{{ note.brief_note4 }}</div>
         <div class="note-content">{{ note.date }}</div>
-        <div class="note-content">{{ users.query.filter_by(id=note.user_id).first().nickname }} </div>
+        <div class="note-content">{{ users.query.filter_by(id=note.user_id).first().pen_name }} </div>
         <div class="float-end mt-2">
-          {% if (note.user_id == user.id) or (user.nickname == "관리자") %}
+          {% if (note.user_id == user.id) or (user.tier == 1) %}
           <button type="button" class="btn-close" onClick="deleteNote({{ note.id }})">
           </button>
            {% else %}
@@ -64,6 +64,12 @@
   {% set cur_page = page|int %}
   {% set NOTE_COUNT = notes|count %}  
   {% set TOTAL_PAGES= ((NOTE_COUNT-1) // NOTE_IN_PAGE) + 1 %}
+  {% if filter_type == "전체" %}
+    {% set PAGE_URL = url_for('views.home')  %}  
+  {% else %}
+  {% set PAGE_URL = url_for('views.home',filter_type=filter_type, filter_content=filter_content)  %}  
+  {% endif %}
+  
   <!-- 전체 페이지 수가 2일 때 -->
   {% if TOTAL_PAGES == 2 %}  
   <nav aria-label="...">
@@ -75,9 +81,9 @@
           <span class="sr-only">(current)</span>
         </span>
       </li>
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='2') }}">2</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=2' }}">2</a></li>
       {% else %}
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='1') }}">1</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL }}">1</a></li>
       <li class="page-item active" aria-current="page">
         <span class="page-link">
           2
@@ -97,20 +103,20 @@
           <span class="sr-only">(current)</span>
         </span>
       </li>
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='2') }}">2</a></li>
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='3') }}">3</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=2' }}">2</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=3' }}">3</a></li>
       {% elif cur_page == 2 %}
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='1') }}">1</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL }}">1</a></li>
       <li class="page-item active" aria-current="page">
         <span class="page-link">
           2
           <span class="sr-only">(current)</span>
         </span>
       </li>   
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='3') }}">3</a></li>  
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=3' }}">3</a></li>  
       {% else %}
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='1') }}">1</a></li>
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='2') }}">2</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=1' }}">1</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=2' }}">2</a></li>
       <li class="page-item active" aria-current="page">
         <span class="page-link">
           3
@@ -124,22 +130,22 @@
   <nav aria-label="...">
     <ul class="pagination justify-content-center">
       {% if cur_page == 1 %}
-      <li class="page-item disabled"><a class="page-link" href="{{ url_for('views.home', page= (cur_page - 1)|string ) }}">Previous</a></li>
+      <li class="page-item disabled"><a class="page-link" href="{{ PAGE_URL + '?page=' + (cur_page - 1)|string }}">Previous</a></li>
       <li class="page-item active" aria-current="page">
         <span class="page-link">
           1
           <span class="sr-only">(current)</span>
         </span>
       </li>   
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='2') }}">2</a></li> 
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page='3') }}">3</a></li> 
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page= (cur_page + 1)|string ) }}">Next</a></li> 
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=2' }}">2</a></li> 
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=3' }}">3</a></li> 
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=' + (cur_page + 1)|string }}">Next</a></li> 
       {% else %}
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page= (cur_page - 1)|string ) }}">Previous</a></li>
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=' + (cur_page - 1)|string }}">Previous</a></li>
         {% if cur_page-2 > 0 %}
         <li class="page-item disabled"><a class="page-link" href="#">...</a></li> 
         {% endif %}
-      <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page= (cur_page - 1)|string ) }}">{{ cur_page-1 }}</a></li> 
+      <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=' + (cur_page - 1)|string }}">{{ cur_page-1 }}</a></li> 
       <li class="page-item active" aria-current="page">
         <span class="page-link">
           {{ cur_page }}
@@ -147,19 +153,48 @@
         </span>
       </li> 
         {% if cur_page+1 <= TOTAL_PAGES %}  
-        <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page= (cur_page + 1)|string ) }}">{{ cur_page+1 }}</a></li>
+        <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=' + (cur_page + 1)|string }}">{{ cur_page+1 }}</a></li>
           {% if cur_page+2 <= TOTAL_PAGES %}
           <li class="page-item disabled"><a class="page-link" href="#">...</a></li> 
           {% endif %}
         {% endif %} 
         {% if cur_page >= TOTAL_PAGES %}
-        <li class="page-item disabled"><a class="page-link" href="{{ url_for('views.home', page= (cur_page + 1)|string ) }}">Next</a></li> 
+        <li class="page-item disabled"><a class="page-link" href="{{ PAGE_URL + '?page=' + (cur_page + 1)|string }}">Next</a></li> 
         {% else %}
-        <li class="page-item"><a class="page-link" href="{{ url_for('views.home', page= (cur_page + 1)|string ) }}">Next</a></li> 
+        <li class="page-item"><a class="page-link" href="{{ PAGE_URL + '?page=' + (cur_page + 1)|string }}">Next</a></li> 
         {% endif %}
       {% endif %}
-  {% endif %}
-      
-    </ul>
+  {% endif %} 
+    </ul>    
   </nav>
+  <hr></hr>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="input-group justify-content-center mx-2">
+      <div class="col-auto">
+        <select class="form-select" name="filter-type" id="inputGroupSelect01" aria-label="Example select with button addon">
+          {% set filter_types=["전체", "차명", "필명", "종류"] %}
+          {% for filtertype in filter_types %}
+          {% if filter_type == filtertype %}
+            <option selected value="{{ filtertype }}">{{ filtertype }}</option>
+          {% else %}
+            <option value="{{ filtertype }}">{{ filtertype }}</option>
+          {% endif %}{% endfor %}
+        </select>
+      </div>
+      <div class="col-auto">
+        <label class="sr-only" for="inlineFormInputGroup">Username</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">@</div>
+          </div>
+          
+          <input type="text" class="form-control" name="filter-content" id="inlineFormInputGroup" value="{{ '' if filter_type=='전체' else filter_content }}">
+        </div>
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-white border mb-2">찾기</button>
+      </div>
+    </div>
+  </form>
+
 {% endblock %}
