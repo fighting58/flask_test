@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% block title %}User Management{% endblock %}
+
+{% block content %}
+<h1 class="page-title">회원 관리</h1>
+
+{% if user.tier == 1 %}
+<table class="table">
+    <thead>
+      <tr>
+        <th class="text-center" scope="col">삭제여부</th>
+        <th class="text-center" scope="col">ID</th>
+        <th class="text-center" scope="col">Email</th>
+        <th class="text-center" scope="col">Pen Name</th>
+        <th class="text-center" scope="col">Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for registered_user in users %}
+      <tr>
+        <th class="text-center" scope="row">
+            <form method="POST" action="/management/user/delete/{{ registered_user.id }}">                  
+                <button type="summit" class="btn btn-close border btn-sm btn-outline-danger"></button>
+            </form>
+        </th>
+        <td class="text-center">{{ registered_user.id }}</td>
+        <td class="text-center">{{ registered_user.email }}</td>
+        <td class="text-center">
+            <form method="POST" action="/management/user/update/{{ registered_user.id }}">
+                <input type="text" class="text-nowrap bd-highlight text-center" style="width: 8rem;"  name="new-pen-name" value="{{ registered_user.pen_name }}" />            
+                <button type="summit" class="btn btn-outline-danger btn-sm">Update</button>
+            </form></td>
+        <td class="text-center">
+            <form method="POST" action="/management/user/update/{{ registered_user.id }}">
+                <input type="text" class="text-nowrap bd-highlight text-center" style="width: 8rem;"  name="new-tier" value="{{ registered_user.tier }}" />            
+                <button type="summit"  class="btn btn-outline-danger btn-sm">Update</button>
+            </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <div class="text-center">관리자만 볼 수 있습니다.</div>
+  {% endif %}
+
+{% endblock %}
+
+{% block style %}
+{{ super() }}
+{% endblock %}
+

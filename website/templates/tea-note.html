@@ -145,7 +145,7 @@
 {{ super() }}
 {% set taste_data = [note.t1, note.t2, note.t3, note.t4, note.t5, note.t6, note.t7, note.t8, note.t9, note.t10, note.t11, note.t12] %}
 {% set perfume_data = [note.p1, note.p2, note.p3, note.p4, note.p5, note.p6, note.p7, note.p8, note.p9, note.p10, note.p11, note.p12] %}
-{% set MAXIMUM_LIMIT = [20, 100, 600] %}
+{% set MAXIMUM_LIMIT = [10, 100, 300] %}
 <script>
     const ctx = document.getElementById('taste-chart');
     const ctx2 = document.getElementById('perfume-chart');

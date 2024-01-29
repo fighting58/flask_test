@@ -41,6 +41,11 @@
           <span class="navbar-text">
             <a class="nav-item nav-link" id="new_note" href="/teanote_form">&plus; 노트</a>
           </span> 
+          {% if user.tier == 1 %}
+          <span class="navbar-text mx-3">
+            <a class="nav-item nav-link" id="new_note" href="/management/user">회원관리</a>
+          </span> 
+          {% endif %}
           {% endif %}
         </div>
       </div>
@@ -84,6 +89,11 @@
     {% endblock %}
 
   {% block style %}
+  <!-- <style>
+  html {
+    font-size: 62.5%;
+  }
+</style> -->
   {% endblock %}
 
   </body>

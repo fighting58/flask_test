@@ -94,12 +94,8 @@
                     <div>
                         <div class="d-flex justify-content-around bd-highlight">
                             {% for color_key, color_value in colored_leaf.items() %}
-                            {% if note.leaf_color == color_key %}
-                                <input type="radio" name="leaf-color" id="{{ color_value}}" value="{{ color_key }}" checked="true" />{{ color_key }}
-                            {% else %}
-                                <input type="radio" name="leaf-color" id="{{ color_value}}" value="{{ color_key }}" />{{ color_key }}
-                            {% endif %} {% endfor %}
-     
+                                <input type="radio" name="leaf-color" id="{{ color_value }}" value="{{ color_key }}" {% if color_value == 'amber_leaf' %} checked {% endif %} />{{ color_key }}
+                            {% endif %} {% endfor %}     
                         </div>                    
                     </div>
                 </div>    

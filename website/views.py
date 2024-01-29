@@ -8,7 +8,7 @@ import json
 import os
 
 views = Blueprint('views', __name__)
-UPLOAD_FOLDER = 'C:/Users/USER/PycharmProjects/flask_test/website/static/upload-images'
+UPLOAD_FOLDER = 'C:/Users/Kim/Documents/PythonProjects/flask_test/website/static/upload-images'
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -355,3 +355,32 @@ def teanote_modify(noteid):
 def show_note(noteid):
     note = Note.query.filter_by(id = noteid).first()
     return render_template('tea-note.html', note=note, user=current_user)
+
+
+@views.route('/management/user')
+@login_required
+def user_management():
+    return render_template('user_management.html', user=current_user, users=User.query.all())
+
+@views.route('/management/user/update/<int:userid>', methods=['POST'])
+@login_required
+def update_user(userid):
+    user=User.query.get(userid)
+    if user:
+        new_pen_name = request.form.get('new-pen-name')
+        new_tier = request.form.get('new-tier')
+        if new_pen_name:
+            user.pen_name = new_pen_name
+        if new_tier:
+            user.tier = new_tier
+    db.session.commit()
+    return redirect(url_for('views.user_management'))
+
+@views.route('/management/user/delete/<int:userid>', methods=['POST'])
+@login_required
+def delete_user(userid):
+    user=User.query.get(userid)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+    return redirect(url_for('views.user_management'))

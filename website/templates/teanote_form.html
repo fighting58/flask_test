@@ -34,17 +34,17 @@
         <div class="bd-highlight mt-1">
             <div class="d-flex flex-column align-items-center bd-highlight">
                 <div class="bd-highlight">
-                    <label class="input-label" for="country">평점: </label><input type="range" class="big-slider" min="1" max="5" name="grade" value="1" />
+                    <label class="input-label" for="country">평점: </label><input type="range" class="big-slider" min="1" max="5" name="grade" value="3" />
                 </div>
                 <div class="p-2 bd-highlight">
                     <div class="tea-outline-item">    
                         <label class="input-label" for="tea-quantity">무게(g)</label><input class="tea-outline-input" type="number" name = "tea-quantity" id="tea-quantity" value="5" /> 
                     </div>
                     <div class="tea-outline-item"> 
-                        <label class="input-label" for="tea-temprature">온도(℃)</label><input class="tea-outline-input" type="number" name = "tea-temprature" id="tea-temprature" value="35" />
+                        <label class="input-label" for="tea-temprature">온도(℃)</label><input class="tea-outline-input" type="number" name = "tea-temprature" id="tea-temprature" value="98" />
                     </div>
                     <div class="tea-outline-item"> 
-                        <label class="input-label" for="tea-brew-time">시간(초)</label><input class="tea-outline-input" type="number" name = "tea-brew-time" id="tea-brew-time" value="100" />
+                        <label class="input-label" for="tea-brew-time">시간(초)</label><input class="tea-outline-input" type="number" name = "tea-brew-time" id="tea-brew-time" value="180" />
                     </div>
                 </div>  
             </div>
@@ -53,8 +53,8 @@
         <div class="bd-highlight mt-n4">
             <table style="border-collapse: collapse; border-spacing: 0; padding:0;" >
                 <th> 
-                    <td class="leaf_detail_column"> 마른 잎</td>
-                    <td class="leaf_detail_column"> 우린 잎</td>
+                    <td class="text-center"> 마른 잎</td>
+                    <td class="text-center"> 우린 잎</td>
                 </th>
                 <tr>
                     <td class="table-row-name">외형</td>
@@ -69,6 +69,7 @@
             </table>
         </div>
         <!-- 수색, 투명도 -->
+        {% set colored_leaf = {"미색":"off-white-leaf", "연두":"light-green-leaf", "노랑":"yellow-leaf", "호박":"amber-leaf", "주황":"orange-leaf", "빨강":"red-leaf", "갈색":"brown-leaf"} %}
         <div class="bd-highlight mt-n4">
              <div class="d-flex flex-column align-items-center bd-highlight">
                 <div class="p-2 bd-highlight">                    
@@ -88,14 +89,10 @@
                     </div>            
                     <div>
                         <div class="d-flex justify-content-around bd-highlight">
-                            <input type="radio" name="leaf-color" id="off-white-leaf" value="미색" />미색
-                            <input type="radio" name="leaf-color" id="light-green-leaf" value="연두" />연두
-                            <input type="radio" name="leaf-color" id="yellow-leaf" value="노랑" />노랑
-                            <input type="radio" name="leaf-color" id="amber-leaf" value="호박" />호박
-                            <input type="radio" name="leaf-color" id="orange-leaf" value="주황" />주황
-                            <input type="radio" name="leaf-color" id="red-leaf" value="빨강" />빨강
-                            <input type="radio" name="leaf-color" id="brown-leaf" value="갈색" />갈색        
-                        </div>                    
+                            {% for color_key, color_value in colored_leaf.items() %}                            
+                                <input type="radio" name="leaf-color" id="{{ color_value }}" value="{{ color_key }}" {% if loop.index == 4 %} checked {% endif %} />{{ color_key }}
+                            {% endfor %}     
+                        </div>                   
                     </div>
                 </div>    
                 <span class="d-block p-0 "> &nbsp; </span>   
@@ -120,7 +117,7 @@
                         <div class="bd-highlight">
                             <div class="d-flex flex-column align-items-center bd-highlight">
                                 <div class="bd-highlight">
-                                    <input type="range" class="big-slider" name="taste-slider" id="taste-slider" min="1" max="10" value="1" />
+                                    <input type="range" class="big-slider" name="taste-slider" id="taste-slider" min="1" max="10" value="5" />
                                     <div class="d-flex justify-content-between bd-highlight">
                                         <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
                                     </div>
@@ -170,7 +167,7 @@
             <div class="d-flex flex-column align-items-center bd-highlight">
                 <div class="bd-highlight"> 피니쉬 </div>
                 <div class="bd-highlight">
-                    <input type="range" class="big-slider" name="finish-slider" min="1" max="5" value="1" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
+                    <input type="range" class="big-slider" name="finish-slider" min="1" max="5" value="3" oninput="document.getElementById('tea-finish').innerHTML=this.value;" />
                     <span class="value-indicator" id="tea-finish">1</span>
                     <div class="d-flex justify-content-between" style="width: 21rem;">
                         <span>매우 길다</span><span>길다</span> <span>중간</span><span>짧다</span><span>매우 짧다</span>
@@ -234,9 +231,6 @@
     .leaf-detail {
         width: 11rem;
         height: 6rem;
-    }
-    .leaf-detail-column {
-        text-align: center;
     }
     .tea-outline-input {
         width: 20rem;
