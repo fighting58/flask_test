@@ -24,13 +24,12 @@
         {% if note.country or note.sailer %}
         <div class="d-flex justify-content-center" style="gap: 2rem; margin: 0; padding:0; align-items: center;" >
             {% if note.sailer %}
-            <button type="button" class="btn btn-info" data-bs-toggle="popover" data-bs-title="판매처" data-bs-content="{{ note.sailer }}" 
+            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="left" title="{{ note.sailer }}" 
                     style="font-size: 0.7rem; height: 1.2rem; padding:0 1.5rem 0.5rem 1.5rem; ">판매처
             </button>
             {% endif %}
             {% if note.country %}
-            <button type="button" class="btn btn-info" data-bs-toggle="popover" data-bs-title="원산지" 
-                    data-bs-content="{{ note.country }}" 
+            <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ note.country }}" 
                     style="font-size: 0.7rem; height: 1.2rem; padding:0 1.5rem 0.5rem 1.5rem; ">원산지
             </button>
             {% endif %}
@@ -58,6 +57,12 @@
         <div class="chart-element chart-group1-element"><canvas  id="time-chart"></canvas></div>  
         <div class="info-box">
             <div class="tea-environment">{{ note.tea_brew_time }}초</div>
+        </div>      
+    </div>
+    <div class="chart-item chart-group1">
+        <div class="chart-element chart-group1-element" ><canvas  id="stamen-chart"></canvas></div>  
+        <div class="info-box" >
+            <div class="tea-environment">{{ note.leaf_color }}</div>
         </div>      
     </div>
 </div>
@@ -152,6 +157,11 @@
     const ctx_weight = document.getElementById('weight-chart');
     const ctx_temprature = document.getElementById('temprature-chart');
     const ctx_time = document.getElementById('time-chart');
+    const ctx_stamen = document.getElementById('stamen-chart');
+    const colored_leaf = ["미색", "연두", "노랑", "호박", "주황", "빨강", "갈색"]
+    let stamen_data = [0, 0, 0, 0, 0, 0, 0]
+    stamen_data[colored_leaf.indexOf("{{ note.leaf_color }}")] = 1
+
 
     const weigthChart = new Chart(ctx_weight, {
         type: 'doughnut',
@@ -167,6 +177,7 @@
         },
         options: {
             cutout: '70%',
+            events:[],
             plugins: {
                 legend:{
                     display: false,
@@ -188,6 +199,7 @@
         },
         options: {
             cutout: '70%',
+            events:[],
             plugins: {
                 legend:{
                     display: false,
@@ -209,6 +221,7 @@
         },
         options: {
             cutout: '70%',
+            events:[],
             plugins: {
                 legend:{
                     display: false,
@@ -216,6 +229,38 @@
             }            
         }}
     );
+
+    const stamenChart = new Chart(ctx_stamen, {
+        type: 'polarArea',
+        data:  {
+            labels: colored_leaf,
+            datasets: [{
+                label: 'My First Dataset',
+                data: stamen_data,
+                backgroundColor: [
+                'rgb(211, 211, 211)',
+                'rgb(148, 192, 86)',
+                'rgb(255, 209, 13)',
+                'rgb(189, 127, 65)',
+                'rgb(242, 119, 61)',
+                'rgb(187, 70, 66)',
+                'rgb(151, 90, 62)'
+                ],
+            }]
+        },
+        options: {
+            scales: {                
+                r: {  
+                    ticks: {display: false},
+                    }},
+            events:[],
+            plugins: {
+                legend:{
+                    display: false,
+                } 
+            }            
+        }});
+
 
     const tasteChart = new Chart(ctx, {
         type: 'radar',
@@ -332,7 +377,7 @@
         width: 60%;
         height: 60%;
         border-radius: 50%;
-        z-index: 1;
+        z-index: 2;
         background-color: #c0c0f1;
         background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#d17070));        
         background-image: -webkit-radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(186,209,242,1) 60%);
@@ -358,7 +403,7 @@
         justify-items: center;
         position: absolute;
         margin: 0 auto;
-        z-index: 2;
+        z-index: 1;
     }
     .chart-group1, .chart-group1-element {
         width: 5rem;

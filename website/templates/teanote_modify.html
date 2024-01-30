@@ -13,11 +13,7 @@
                 <div class="p-2 bd-highlight">
                     <div class="d-flex justify-content-between bd-highlight" style="width: 25rem;" >
                         {% for tea_key, tea_value in tea_kinds.items() %}
-                            {% if note.type_of_tea == tea_key %}
-                            <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" checked="true" />{{ tea_key }}
-                            {% else %}
-                            <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" />{{ tea_key }}
-                            {% endif%}
+                            <input type="radio" name="tea-types" id="{{ tea_value }}" value="{{ tea_key }}" {% if note.type_of_tea == tea_key %} checked {% endif %} />{{ tea_key }}
                         {% endfor %}
                     </div>
                 </div>
@@ -94,8 +90,8 @@
                     <div>
                         <div class="d-flex justify-content-around bd-highlight">
                             {% for color_key, color_value in colored_leaf.items() %}
-                                <input type="radio" name="leaf-color" id="{{ color_value }}" value="{{ color_key }}" {% if color_value == 'amber_leaf' %} checked {% endif %} />{{ color_key }}
-                            {% endif %} {% endfor %}     
+                                <input type="radio" name="leaf-color" id="{{ color_value }}" value="{{ color_key }}" {% if note.leaf_color == color_key %} checked {% endif %} />{{ color_key }}
+                            {% endfor %}     
                         </div>                    
                     </div>
                 </div>    
@@ -195,7 +191,6 @@
     </div>
     <span class="d-block p-0 "> &nbsp; </span>
     <div class="d-flex flex-column align-items-center bd-highlight">
-        <p class="text-muted" style="font-size: 0.8rem;">** 파일이 선택되었는지 확인하세요 **</p>
         <div class="bd-highlight mt-n3">
             <button type="submit" class="btn btn-primary" id="submit-button" style="width: 10rem;">수정/저장</button>
         </div>

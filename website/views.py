@@ -6,9 +6,10 @@ from datetime import datetime
 from . import db, ALLOWED_EXTENSIONS
 import json
 import os
+from PIL import Image
 
 views = Blueprint('views', __name__)
-UPLOAD_FOLDER = 'C:/Users/Kim/Documents/PythonProjects/flask_test/website/static/upload-images'
+UPLOAD_FOLDER = 'C:/Users/USER/PycharmProjects/flask_test/website/static/upload-images'
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -18,7 +19,13 @@ def file_upload(userid, file):
     _, ext = os.path.splitext(file.filename)
     fn = str(userid) + str(datetime.now().isoformat(timespec='seconds')) + ext
     fn = secure_filename(fn)
-    file.save(os.path.join(UPLOAD_FOLDER, fn))
+    # 이미지 리사이즈: 가로비율(가로길이 최대 400px), 세로비율(세로길이 최대 300px)
+    img = Image.open(file)
+    direction = 'landscape' if img.size[0] > img.size[1] else 'portrait'
+    scale_ratio = 400 / float(img.size[0]) if direction=='landscape' else 300/float(img.size[1])
+    new_image = img.resize((int(img.size[0]*scale_ratio), int(img.size[1]*scale_ratio)), Image.ANTIALIAS)
+    # new_image.save(url_for('static', filename= 'upload-images/') + fn)
+    new_image.save(os.path.join(UPLOAD_FOLDER, fn))
     return fn
 
 def split_string(input_str, max_length=20):
@@ -55,15 +62,15 @@ def filtered_notes(filter_type, filter_content):
 @login_required
 def home(filter_type="전체", filter_content="전체"):
     page = request.args.get('page')
-    print("page= ", page)
     if not page:
         page = 1
-
+        
     if request.method =="POST":
         filter_type, filter_content = request.form.get('filter-type'), request.form.get('filter-content')
         page = 1
 
     notes= filtered_notes(filter_type, filter_content)
+
     if request.method =="POST":
         return redirect(url_for('views.home', filter_type=filter_type, filter_content=filter_content))    
     else:
@@ -81,7 +88,6 @@ def delete_note():
                 os.unlink(os.path.join(UPLOAD_FOLDER, note.image))
                 flash('삭제되었습니다.', category='success')
             except Exception as e:
-                print(e)
                 flash('노트는 삭제되었지만 관련 파일은 찾지 못했습니다.', category='error')
             db.session.delete(note)
             db.session.commit()
@@ -172,6 +178,7 @@ def teanote_form():
         date =  datetime.now().replace(microsecond=0)
 
         file = request.files['file']
+        print(file)
         if file.filename == '':
             flash('No selected file', category="error")
             return redirect(request.url)
@@ -344,7 +351,7 @@ def teanote_modify(noteid):
 
             db.session.add(this_note)
             db.session.commit()
-            flash('Note added!', category='success')
+            flash('노트가 수정되었습니다.', category='success')
         return redirect(url_for('views.home', _method='POST', notes=Note.query.all(), user=current_user, users=User, page=1))
 
     return render_template("teanote_modify.html", note=this_note, user=current_user)

@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+from datetime import timedelta
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -13,6 +14,7 @@ def create_app():
     app.config['SECRET_KEY'] = 'Genius_is_1_inspiration_and_99_perspiration'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
      
     db.init_app(app)
 
@@ -34,7 +36,7 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
-    
+
     return app
 
 
