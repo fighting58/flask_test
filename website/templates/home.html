@@ -169,33 +169,35 @@
     </ul>    
   </nav>
   <hr></hr>
-  <form method="POST" enctype="multipart/form-data">
-    <div class="input-group justify-content-center mx-2">
-      <div class="col-auto">
-        <select class="form-select" name="filter-type" id="inputGroupSelect01" aria-label="Example select with button addon">
-          {% set filter_types=["전체", "차명", "필명", "종류"] %}
-          {% for filtertype in filter_types %}
-          {% if filter_type == filtertype %}
-            <option selected value="{{ filtertype }}">{{ filtertype }}</option>
-          {% else %}
-            <option value="{{ filtertype }}">{{ filtertype }}</option>
-          {% endif %}{% endfor %}
-        </select>
-      </div>
-      <div class="col-auto">
-        <label class="sr-only" for="inlineFormInputGroup">Username</label>
-        <div class="input-group mb-2">
-          <div class="input-group-prepend">
-            <div class="input-group-text">@</div>
+  <div class="container m-0">
+    <form method="POST" enctype="multipart/form-data">
+      <div class="input-group justify-content-center mx-2">
+        <div class="col-auto">
+          <select class="form-select" name="filter-type" id="inputGroupSelect01" aria-label="Example select with button addon">
+            {% set filter_types=["전체", "차명", "필명", "종류"] %}
+            {% for filtertype in filter_types %}
+            {% if filter_type == filtertype %}
+              <option selected value="{{ filtertype }}">{{ filtertype }}</option>
+            {% else %}
+              <option value="{{ filtertype }}">{{ filtertype }}</option>
+            {% endif %}{% endfor %}
+          </select>
+        </div>
+        <div class="col-auto">
+          <label class="sr-only" for="inlineFormInputGroup">Username</label>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">@</div>
+            </div>
+            
+            <input type="text" class="form-control" name="filter-content" id="inlineFormInputGroup" value="{{ '' if filter_type=='전체' else filter_content }}">
           </div>
-          
-          <input type="text" class="form-control" name="filter-content" id="inlineFormInputGroup" value="{{ '' if filter_type=='전체' else filter_content }}">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-white border mb-2">찾기</button>
         </div>
       </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-white border mb-2">찾기</button>
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
 
 {% endblock %}
