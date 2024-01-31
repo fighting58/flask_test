@@ -294,6 +294,7 @@ def teanote_modify(noteid):
 
         file = request.files['file']
         if file and allowed_file(file.filename):
+            os.unlink(os.path.join(UPLOAD_FOLDER, this_note.image)) # 기존 파일 삭제
             this_note.image = file_upload(current_user.id, file)       
         
         if len(teaname) < 1:
